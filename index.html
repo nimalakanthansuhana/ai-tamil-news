@@ -1,69 +1,590 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1428"><title>AI Tamil News</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#091124">
+<title>AI Tamil News · நேரடி தமிழ் செய்திகள்</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0b1428;--blue:#087bdc;--red:#e5282d;--ink:#101a31;--muted:#53627e;--page:#f2f5fa;--line:#dce4ef}
-*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font-family:'Noto Sans Tamil',system-ui,sans-serif}
-.top{background:var(--navy);color:#fff;padding:12px 18px}.live{display:inline-block;border:1px solid #74343e;background:#321d2b;color:#ffb2b4;border-radius:20px;padding:4px 11px;font-size:13px;font-weight:700}.date{font-size:12px;color:#d0d8e7;margin-top:7px}
-.brand{background:#fff;padding:18px;border-bottom:1px solid #e4e9f1}.brandrow{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0ba8ed,#6459f3);display:grid;place-items:center;color:white;font-size:25px}h1{font-family:Arial,sans-serif;color:#0877df;font-size:22px;margin:0 0 3px}.tagline{font-size:13px;color:#43516b}.breaking{background:#fff;padding:10px 18px;border-bottom:1px solid #e7ebf2;font-size:13px;display:flex;gap:12px;align-items:center}.breaking strong{background:var(--red);color:white;border-radius:6px;padding:4px 9px;white-space:nowrap}.ticker{color:#a90016;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cover-wrap{max-width:850px;margin:16px auto 0;padding:0 18px}.cover-box{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0b1428,#162b54);box-shadow:0 8px 22px #18294714}.cover-img{width:100%;height:210px;object-fit:cover;display:block}.cover-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(11,20,40,0.82),rgba(11,20,40,0.15));display:flex;align-items:flex-end;padding:16px 18px}.cover-title{margin:0 0 4px;color:#fff;font-size:19px;font-weight:800;line-height:1.35}.cover-sub{margin:0;color:#dce6f7;font-size:13px}
-main{max-width:850px;margin:auto;padding:18px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}.filter{border:1px solid #dce4ee;background:#fff;color:#34425c;border-radius:22px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}.filter.active{background:#101a30;color:#fff;border-color:#101a30;font-weight:700}.search{width:100%;height:44px;border:1px solid #dce4ee;background:#fff;border-radius:12px;padding:0 14px;font:inherit;font-size:14px;margin-bottom:18px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.head h2{font-size:19px;margin:0}.count{font-size:12px;color:#52617d}.news-list{display:grid;gap:15px}.card{background:#fff;border:1px solid #e1e7f0;border-radius:15px;padding:14px;box-shadow:0 8px 20px #1829470a}.photo{width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:12px}.meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11px;color:#53617c;margin-bottom:8px}.pill{background:#e0f2ff;color:#087bc4;border-radius:15px;padding:3px 9px;font-weight:700}.headline{font-size:17px;line-height:1.6;margin:0 0 7px;font-weight:800}.summary{font-size:13px;line-height:1.8;color:#53627d;margin:0 0 10px}.read{display:inline-block;border:1px solid #dce4ee;border-radius:8px;padding:6px 11px;color:#15213a;text-decoration:none;font-size:12px;font-weight:700}.source{font-size:11px;color:#68758b;margin-top:10px}.empty{background:#fff;padding:22px;border-radius:12px;text-align:center;color:#64718a;line-height:1.8}footer{background:var(--navy);color:#aab5c8;text-align:center;padding:17px;font-size:12px}
-@media(min-width:650px){.news-list{grid-template-columns:repeat(2,minmax(0,1fr))}.card{min-height:300px}.cover-img{height:250px}}
-</style></head>
+:root{
+  --navy:#091124;
+  --navy-2:#132347;
+  --blue:#0a7cff;
+  --accent:#635bff;
+  --red:#e11d48;
+  --ink:#0f172a;
+  --muted:#475569;
+  --page:#f1f5f9;
+  --card:#ffffff;
+  --line:#e2e8f0;
+  --pill-bg:#e0f2fe;
+  --pill-ink:#0369a1;
+  --shadow:0 10px 25px -5px rgba(15,23,42,0.07),0 4px 10px -6px rgba(15,23,42,0.05);
+}
+body.dark{
+  --ink:#f1f5f9;
+  --muted:#94a3b8;
+  --page:#0b1120;
+  --card:#131c31;
+  --line:#1e293b;
+  --pill-bg:#1e3a5f;
+  --pill-ink:#7dd3fc;
+  --shadow:0 10px 25px -5px rgba(0,0,0,0.45);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--page);
+  color:var(--ink);
+  font-family:'Noto Sans Tamil',system-ui,-apple-system,sans-serif;
+  transition:background .25s ease,color .25s ease;
+}
+.topbar{
+  background:linear-gradient(90deg,#070d1c,#111e3c);
+  color:#fff;
+  padding:10px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.live-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:rgba(225,29,72,0.18);
+  border:1px solid rgba(251,113,133,0.45);
+  color:#fecdd3;
+  border-radius:999px;
+  padding:4px 12px;
+  font-size:12px;
+  font-weight:700;
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;background:#fb7185;
+  box-shadow:0 0 0 0 rgba(251,113,133,0.7);
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(251,113,133,0.7)}
+  70%{box-shadow:0 0 0 8px rgba(251,113,133,0)}
+  100%{box-shadow:0 0 0 0 rgba(251,113,133,0)}
+}
+.date{font-size:12px;color:#cbd5e1}
+.brand-header{
+  background:var(--card);
+  border-bottom:1px solid var(--line);
+  padding:16px 18px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  backdrop-filter:blur(10px);
+}
+.brand-inner{
+  max-width:980px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand-left{display:flex;align-items:center;gap:13px}
+.logo{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,#0ea5e9,#4f46e5);
+  display:grid;place-items:center;color:#fff;
+  font-weight:800;font-size:20px;letter-spacing:-0.5px;
+  box-shadow:0 8px 18px rgba(79,70,229,0.3);
+}
+h1{
+  margin:0 0 2px;
+  font-size:22px;
+  font-weight:800;
+  background:linear-gradient(90deg,#0284c7,#4f46e5);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.tagline{font-size:12.5px;color:var(--muted);font-weight:500}
+.theme-btn{
+  border:1px solid var(--line);
+  background:var(--page);
+  color:var(--ink);
+  border-radius:12px;
+  padding:8px 12px;
+  font:inherit;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+.breaking-bar{
+  background:var(--card);
+  border-bottom:1px solid var(--line);
+  padding:10px 18px;
+}
+.breaking-inner{
+  max-width:980px;margin:auto;
+  display:flex;align-items:center;gap:12px;
+}
+.breaking-tag{
+  background:linear-gradient(135deg,#e11d48,#be123c);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  padding:5px 11px;
+  border-radius:8px;
+  white-space:nowrap;
+}
+.ticker-wrap{overflow:hidden;flex:1}
+.ticker{
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--red);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+body.dark .ticker{color:#fda4af}
+.container{max-width:980px;margin:auto;padding:18px}
+.cover-box{
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:20px;
+  box-shadow:0 16px 34px rgba(9,17,36,0.18);
+  background:linear-gradient(135deg,#091124,#1d4ed8);
+}
+.cover-img{
+  width:100%;
+  height:230px;
+  object-fit:cover;
+  display:block;
+}
+.cover-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(9,17,36,0.9) 10%,rgba(9,17,36,0.28) 65%,rgba(9,17,36,0.08));
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:20px 22px;
+}
+.cover-chip{
+  display:inline-block;
+  width:fit-content;
+  background:rgba(255,255,255,0.16);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,0.28);
+  color:#fff;
+  font-size:11.5px;
+  font-weight:700;
+  padding:4px 11px;
+  border-radius:999px;
+  margin-bottom:8px;
+}
+.cover-title{
+  margin:0 0 5px;
+  color:#fff;
+  font-size:21px;
+  font-weight:800;
+  line-height:1.35;
+}
+.cover-sub{
+  margin:0;
+  color:#e2e8f0;
+  font-size:13px;
+}
+.controls{
+  display:grid;
+  gap:12px;
+  margin-bottom:18px;
+}
+.filters{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:4px;
+  scrollbar-width:none;
+}
+.filters::-webkit-scrollbar{display:none}
+.filter{
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--ink);
+  border-radius:999px;
+  padding:8px 16px;
+  font:inherit;
+  font-size:13px;
+  font-weight:600;
+  white-space:nowrap;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.filter:hover{border-color:#0a7cff}
+.filter.active{
+  background:linear-gradient(135deg,#0a7cff,#4f46e5);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 6px 14px rgba(10,124,255,0.28);
+}
+.search{
+  width:100%;
+  height:46px;
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--ink);
+  border-radius:14px;
+  padding:0 16px;
+  font:inherit;
+  font-size:14px;
+  outline:none;
+}
+.search:focus{border-color:#0a7cff;box-shadow:0 0 0 3px rgba(10,124,255,0.14)}
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.section-head h2{margin:0;font-size:19px;font-weight:800}
+.count{
+  background:var(--card);
+  border:1px solid var(--line);
+  padding:4px 11px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+}
+.featured-wrap{margin-bottom:18px}
+.news-grid{
+  display:grid;
+  gap:16px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.card:hover{transform:translateY(-3px)}
+.card-media{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  display:block;
+}
+.card-fallback{
+  height:125px;
+  padding:16px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+}
+.card-body{
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+.meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-size:11.5px;
+  color:var(--muted);
+  margin-bottom:9px;
+}
+.pill{
+  background:var(--pill-bg);
+  color:var(--pill-ink);
+  border-radius:999px;
+  padding:3px 10px;
+  font-weight:700;
+}
+.headline{
+  margin:0 0 8px;
+  font-size:17px;
+  line-height:1.55;
+  font-weight:800;
+}
+.summary{
+  margin:0 0 14px;
+  font-size:13.5px;
+  line-height:1.75;
+  color:var(--muted);
+  flex:1;
+}
+.card-foot{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding-top:11px;
+  border-top:1px solid var(--line);
+}
+.source{font-size:11.5px;color:var(--muted);font-weight:600}
+.read{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:var(--page);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:7px 12px;
+  color:var(--ink);
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+}
+.read:hover{background:#0a7cff;color:#fff;border-color:#0a7cff}
+.empty{
+  background:var(--card);
+  border:1px solid var(--line);
+  padding:28px;
+  border-radius:16px;
+  text-align:center;
+  color:var(--muted);
+  line-height:1.8;
+}
+footer{
+  background:var(--navy);
+  color:#94a3b8;
+  text-align:center;
+  padding:22px 16px;
+  font-size:12.5px;
+  margin-top:26px;
+}
+@media(min-width:700px){
+  .cover-img{height:275px}
+  .cover-title{font-size:25px}
+  .news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .featured-card{display:grid;grid-template-columns:1.15fr 1fr}
+  .featured-card .card-media,.featured-card .card-fallback{height:100%;min-height:250px}
+  .featured-card .headline{font-size:21px}
+}
+</style>
+</head>
 <body>
-<header><div class="top"><div class="live">🔴 நேரடி தமிழ் செய்திகள்</div><div class="date" id="dateLine"></div></div>
-<div class="brand"><div class="brandrow"><div class="logo">▣</div><div><h1>AI Tamil News</h1><div class="tagline">எளிய தமிழ் நியூஸ் · இலங்கை · இந்தியா · உலகம்</div></div></div></div>
-<div class="breaking"><strong>முக்கியச் செய்திகள்</strong><div class="ticker" id="ticker">செய்திகள் ஏற்றப்படுகின்றன...</div></div></header>
+<div class="topbar">
+  <div class="live-badge"><span class="dot"></span> நேரடி தமிழ் செய்திகள்</div>
+  <div class="date" id="dateLine"></div>
+</div>
 
-<section class="cover-wrap" aria-label="முகப்புப் படம்">
-  <div class="cover-box">
+<header class="brand-header">
+  <div class="brand-inner">
+    <div class="brand-left">
+      <div class="logo">AI</div>
+      <div>
+        <h1>AI Tamil News</h1>
+        <div class="tagline">நம்பகமான தமிழ் செய்திகள் · இலங்கை · தமிழகம் · உலகம்</div>
+      </div>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">🌙 இரவு</button>
+  </div>
+</header>
+
+<div class="breaking-bar">
+  <div class="breaking-inner">
+    <span class="breaking-tag">முக்கியச் செய்தி</span>
+    <div class="ticker-wrap"><div class="ticker" id="ticker">செய்திகள் ஏற்றப்படுகின்றன...</div></div>
+  </div>
+</div>
+
+<main class="container">
+  <section class="cover-box" aria-label="முகப்புப் படம்">
     <img
       class="cover-img"
       src="./cover.jpg"
       alt="AI Tamil News முகப்புப் படம்"
-      onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22850%22 height=%22250%22 viewBox=%220 0 850 250%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%25%22 stop-color=%22%230b1428%22/><stop offset=%22100%25%22 stop-color=%22%23087bdc%22/></linearGradient></defs><rect width=%22850%22 height=%22250%22 fill=%22url(%23g)%22/><circle cx=%22710%22 cy=%2255%22 r=%2295%22 fill=%22%23ffffff%22 fill-opacity=%220.08%22/><circle cx=%22130%22 cy=%22210%22 r=%22120%22 fill=%22%23ffffff%22 fill-opacity=%220.06%22/></svg>';"
+      onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22980%22 height=%22280%22 viewBox=%220 0 980 280%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%25%22 stop-color=%22%23091124%22/><stop offset=%2255%25%22 stop-color=%22%231d4ed8%22/><stop offset=%22100%25%22 stop-color=%22%234f46e5%22/></linearGradient></defs><rect width=%22980%22 height=%22280%22 fill=%22url(%23g)%22/><circle cx=%22830%22 cy=%2265%22 r=%22120%22 fill=%22%23ffffff%22 fill-opacity=%220.08%22/><circle cx=%22140%22 cy=%22240%22 r=%22140%22 fill=%22%2338bdf8%22 fill-opacity=%220.12%22/></svg>';"
     >
     <div class="cover-overlay">
-      <div>
-        <h2 class="cover-title">உலகெங்கும் உள்ள தமிழ் செய்திகள் ஒரே இடத்தில்</h2>
-        <p class="cover-sub">இலங்கை · தமிழகம் · உலகம் · விளையாட்டு · சினிமா</p>
-      </div>
+      <span class="cover-chip">24×7 உடனுக்குடன் செய்திகள்</span>
+      <h2 class="cover-title">உலகெங்கும் உள்ள தமிழ் செய்திகள் ஒரே இடத்தில்</h2>
+      <p class="cover-sub">இலங்கை · தமிழகம் · உலகம் · விளையாட்டு · சினிமா</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<main><nav class="filters" aria-label="செய்தி வகைகள்">
-<button class="filter active" data-category="அனைத்தும்">அனைத்தும்</button><button class="filter" data-category="இலங்கை">இலங்கை</button><button class="filter" data-category="தமிழகம்">தமிழகம்</button><button class="filter" data-category="உலகம்">உலகம்</button><button class="filter" data-category="விளையாட்டு">விளையாட்டு</button><button class="filter" data-category="சினிமா">சினிமா</button></nav>
-<input class="search" id="search" type="search" placeholder="🔎 தமிழில் செய்திகளைத் தேடவும்...">
-<div class="head"><h2>சமீபத்திய செய்திகள்</h2><span class="count" id="count">ஏற்றப்படுகிறது...</span></div>
-<section class="news-list" id="newsList"><div class="empty">சமீபத்திய செய்திகள் ஏற்றப்படுகின்றன...</div></section></main>
+  <div class="controls">
+    <nav class="filters" aria-label="செய்தி வகைகள்">
+      <button class="filter active" data-category="அனைத்தும்">அனைத்தும்</button>
+      <button class="filter" data-category="இலங்கை">இலங்கை</button>
+      <button class="filter" data-category="தமிழகம்">தமிழகம்</button>
+      <button class="filter" data-category="உலகம்">உலகம்</button>
+      <button class="filter" data-category="விளையாட்டு">விளையாட்டு</button>
+      <button class="filter" data-category="சினிமா">சினிமா</button>
+    </nav>
+    <input class="search" id="search" type="search" placeholder="🔎 தமிழில் செய்திகளைத் தேடவும்...">
+  </div>
+
+  <div class="section-head">
+    <h2>சமீபத்திய செய்திகள்</h2>
+    <span class="count" id="count">ஏற்றப்படுகிறது...</span>
+  </div>
+
+  <div class="featured-wrap" id="featuredWrap"></div>
+  <section class="news-grid" id="newsList">
+    <div class="empty">சமீபத்திய செய்திகள் ஏற்றப்படுகின்றன...</div>
+  </section>
+</main>
+
 <footer>© 2026 AI Tamil News · செய்திகளின் மூல இணைப்புகள் ஒவ்வொரு கட்டுரையிலும் வழங்கப்பட்டுள்ளன.</footer>
+
 <script>
-const list=document.getElementById('newsList'), search=document.getElementById('search');
+const list=document.getElementById('newsList'),featuredWrap=document.getElementById('featuredWrap'),search=document.getElementById('search'),themeBtn=document.getElementById('themeBtn');
 let articles=[],selected='அனைத்தும்';
-document.getElementById('dateLine').textContent=new Intl.DateTimeFormat('ta-LK',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date());
-function safeUrl(v){try{let u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}}
-function render(){
- const q=search.value.trim().toLocaleLowerCase();
- const data=articles.filter(a=>(selected==='அனைத்தும்'||a.category===selected)&&((a.title||'')+' '+(a.description||'')+' '+(a.source||'')).toLocaleLowerCase().includes(q));
- document.getElementById('count').textContent=data.length+' செய்திகள்';list.replaceChildren();
- if(!data.length){let e=document.createElement('div');e.className='empty';e.textContent='இந்த வகையில் செய்திகள் இல்லை. பின்னர் மீண்டும் முயற்சிக்கவும்.';list.append(e);return}
- data.forEach(a=>{
-  let card=document.createElement('article');card.className='card';
-  let imgUrl=safeUrl(a.image);if(imgUrl){let img=document.createElement('img');img.className='photo';img.src=imgUrl;img.alt='';img.loading='lazy';img.onerror=()=>img.remove();card.append(img)}
-  let meta=document.createElement('div');meta.className='meta';let pill=document.createElement('span');pill.className='pill';pill.textContent=a.category||'செய்தி';let date=document.createElement('time');date.textContent=a.publishedAt?new Intl.DateTimeFormat('ta-LK',{day:'numeric',month:'short',year:'numeric'}).format(new Date(a.publishedAt)):'இன்று';meta.append(pill,date);card.append(meta);
-  let h=document.createElement('h3');h.className='headline';h.textContent=a.title||'தலைப்பு இல்லை';card.append(h);
-  if(a.description){let p=document.createElement('p');p.className='summary';p.textContent=a.description;card.append(p)}
-  let url=safeUrl(a.url);if(url){let link=document.createElement('a');link.className='read';link.href=url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='மூலச் செய்தியைப் படிக்க ↗';card.append(link)}
-  let src=document.createElement('div');src.className='source';src.textContent=a.source?'மூலம்: '+a.source:'';card.append(src);list.append(card);
- });
+
+const catThemes={
+  'இலங்கை':'linear-gradient(135deg,#0f766e,#0284c7)',
+  'தமிழகம்':'linear-gradient(135deg,#b45309,#dc2626)',
+  'உலகம்':'linear-gradient(135deg,#1e3a8a,#4f46e5)',
+  'விளையாட்டு':'linear-gradient(135deg,#15803d,#0d9488)',
+  'சினிமா':'linear-gradient(135deg,#7e22ce,#db2777)'
+};
+
+document.getElementById('dateLine').textContent=new Intl.DateTimeFormat('ta-LK',{
+  weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'
+}).format(new Date());
+
+themeBtn.addEventListener('click',()=>{
+  document.body.classList.toggle('dark');
+  themeBtn.textContent=document.body.classList.contains('dark')?'☀️ பகல்':'🌙 இரவு';
+});
+
+function safeUrl(v){
+  try{let u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}
 }
-document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');selected=b.dataset.category;render()}));
+
+function createFallback(cat){
+  const box=document.createElement('div');
+  box.className='card-fallback';
+  box.style.background=catThemes[cat]||'linear-gradient(135deg,#0f172a,#1d4ed8)';
+  box.innerHTML='<span>AI Tamil News</span><span>'+(cat||'செய்தி')+'</span>';
+  return box;
+}
+
+function buildCard(a,isFeatured){
+  const card=document.createElement('article');
+  card.className=isFeatured?'card featured-card':'card';
+
+  const imgUrl=safeUrl(a.image);
+  if(imgUrl){
+    const img=document.createElement('img');
+    img.className='card-media';
+    img.src=imgUrl;
+    img.alt=a.title||'செய்திப் படம்';
+    img.loading='lazy';
+    img.onerror=()=>img.replaceWith(createFallback(a.category));
+    card.append(img);
+  }else{
+    card.append(createFallback(a.category));
+  }
+
+  const body=document.createElement('div');
+  body.className='card-body';
+
+  const meta=document.createElement('div');
+  meta.className='meta';
+  const pill=document.createElement('span');
+  pill.className='pill';
+  pill.textContent=(isFeatured?'★ முதன்மை · ':'')+(a.category||'செய்தி');
+  const date=document.createElement('time');
+  date.textContent=a.publishedAt?new Intl.DateTimeFormat('ta-LK',{day:'numeric',month:'short',year:'numeric'}).format(new Date(a.publishedAt)):'இன்று';
+  meta.append(pill,date);
+  body.append(meta);
+
+  const h=document.createElement('h3');
+  h.className='headline';
+  h.textContent=a.title||'தலைப்பு இல்லை';
+  body.append(h);
+
+  if(a.description){
+    const p=document.createElement('p');
+    p.className='summary';
+    p.textContent=a.description;
+    body.append(p);
+  }
+
+  const foot=document.createElement('div');
+  foot.className='card-foot';
+  const src=document.createElement('span');
+  src.className='source';
+  src.textContent=a.source||'Google News';
+  foot.append(src);
+
+  const url=safeUrl(a.url);
+  if(url){
+    const link=document.createElement('a');
+    link.className='read';
+    link.href=url;
+    link.target='_blank';
+    link.rel='noopener noreferrer';
+    link.textContent='மேலும் படிக்க ↗';
+    foot.append(link);
+  }
+
+  body.append(foot);
+  card.append(body);
+  return card;
+}
+
+function render(){
+  const q=search.value.trim().toLocaleLowerCase();
+  const data=articles.filter(a=>
+    (selected==='அனைத்தும்'||a.category===selected)&&
+    ((a.title||'')+' '+(a.description||'')+' '+(a.source||'')).toLocaleLowerCase().includes(q)
+  );
+  document.getElementById('count').textContent=data.length+' செய்திகள்';
+  featuredWrap.replaceChildren();
+  list.replaceChildren();
+
+  if(!data.length){
+    const e=document.createElement('div');
+    e.className='empty';
+    e.textContent='இந்த வகையில் செய்திகள் இல்லை. பின்னர் மீண்டும் முயற்சிக்கவும்.';
+    list.append(e);
+    return;
+  }
+
+  featuredWrap.append(buildCard(data[0],true));
+  data.slice(1).forEach(a=>list.append(buildCard(a,false)));
+}
+
+document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  selected=b.dataset.category;
+  render();
+}));
 search.addEventListener('input',render);
-async function load(){try{let r=await fetch('./news.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('not ready');let d=await r.json();if(!Array.isArray(d)||!d.length)throw Error('empty');articles=d;render();document.getElementById('ticker').textContent=articles[0].title||'புதிய செய்திகள்';}catch(e){list.innerHTML='<div class="empty">இன்னும் செய்தித் தரவு உருவாக்கப்படவில்லை. GitHub Actions செயல்பட்டதும் செய்திகள் இங்கே தோன்றும். இப்பக்கத்தைச் சிறிது நேரம் கழித்து மீண்டும் திறக்கவும்.</div>';document.getElementById('count').textContent='0 செய்திகள்';}}
+
+async function load(){
+  try{
+    const r=await fetch('./news.json?ts='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw Error('not ready');
+    const d=await r.json();
+    if(!Array.isArray(d)||!d.length)throw Error('empty');
+    articles=d;
+    render();
+    document.getElementById('ticker').textContent=articles[0].title||'புதிய செய்திகள்';
+  }catch(e){
+    list.innerHTML='<div class="empty">இன்னும் செய்தித் தரவு உருவாக்கப்படவில்லை. GitHub Actions செயல்பட்டதும் செய்திகள் இங்கே தோன்றும்.</div>';
+    document.getElementById('count').textContent='0 செய்திகள்';
+  }
+}
 load();
-</script></body></html>
+</script>
+</body>
+</html>
+
