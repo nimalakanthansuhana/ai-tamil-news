@@ -10,7 +10,6 @@
 <style>
 :root{
   --navy:#091124;
-  --navy-2:#132347;
   --blue:#0a7cff;
   --accent:#635bff;
   --red:#e11d48;
@@ -66,7 +65,6 @@ body{
 }
 .dot{
   width:8px;height:8px;border-radius:50%;background:#fb7185;
-  box-shadow:0 0 0 0 rgba(251,113,133,0.7);
   animation:pulse 1.6s infinite;
 }
 @keyframes pulse{
@@ -97,7 +95,7 @@ body{
   width:48px;height:48px;border-radius:14px;
   background:linear-gradient(135deg,#0ea5e9,#4f46e5);
   display:grid;place-items:center;color:#fff;
-  font-weight:800;font-size:20px;letter-spacing:-0.5px;
+  font-weight:800;font-size:20px;
   box-shadow:0 8px 18px rgba(79,70,229,0.3);
 }
 h1{
@@ -150,7 +148,6 @@ h1{
 body.dark .ticker{color:#fda4af}
 .container{max-width:980px;margin:auto;padding:18px}
 .cover-box{
-  position:relative;
   border-radius:20px;
   overflow:hidden;
   margin-bottom:20px;
@@ -187,9 +184,7 @@ body.dark .ticker{color:#fda4af}
   font-weight:700;
   white-space:nowrap;
   cursor:pointer;
-  transition:all .2s ease;
 }
-.filter:hover{border-color:#0a7cff}
 .filter.active{
   background:linear-gradient(135deg,#0a7cff,#4f46e5);
   color:#fff;
@@ -208,7 +203,6 @@ body.dark .ticker{color:#fda4af}
   font-size:14.5px;
   outline:none;
 }
-.search:focus{border-color:#0a7cff;box-shadow:0 0 0 3px rgba(10,124,255,0.14)}
 .section-head{
   display:flex;
   justify-content:space-between;
@@ -226,10 +220,7 @@ body.dark .ticker{color:#fda4af}
   color:var(--muted);
 }
 .featured-wrap{margin-bottom:18px}
-.news-grid{
-  display:grid;
-  gap:16px;
-}
+.news-grid{display:grid;gap:16px}
 .card{
   background:var(--card);
   border:1px solid var(--line);
@@ -238,17 +229,16 @@ body.dark .ticker{color:#fda4af}
   box-shadow:var(--shadow);
   display:flex;
   flex-direction:column;
-  transition:transform .2s ease,box-shadow .2s ease;
 }
-.card:hover{transform:translateY(-3px)}
 .card-media{
   width:100%;
-  height:200px;
+  height:210px;
   object-fit:cover;
   display:block;
+  cursor:pointer;
 }
 .card-fallback{
-  height:130px;
+  height:140px;
   padding:16px;
   display:flex;
   align-items:flex-end;
@@ -256,6 +246,7 @@ body.dark .ticker{color:#fda4af}
   color:#fff;
   font-weight:800;
   font-size:16px;
+  cursor:pointer;
 }
 .card-body{
   padding:18px;
@@ -292,9 +283,8 @@ body.dark .ticker{color:#fda4af}
   line-height:1.75;
   color:var(--muted);
   flex:1;
+  cursor:pointer;
 }
-
-/* Social & Like Bar */
 .social-bar{
   display:flex;
   align-items:center;
@@ -315,9 +305,7 @@ body.dark .ticker{color:#fda4af}
   font-size:12px;
   font-weight:700;
   cursor:pointer;
-  transition:transform .15s ease,background .2s ease,color .2s ease;
 }
-.act-btn:active{transform:scale(0.95)}
 .like-btn.liked{
   background:#ffe4e6;
   border-color:#fda4af;
@@ -328,29 +316,10 @@ body.dark .like-btn.liked{
   border-color:#fb7185;
   color:#fda4af;
 }
-.wa-btn{
-  background:#25d366;
-  border-color:#25d366;
-  color:#fff;
-}
-.fb-btn{
-  background:#1877f2;
-  border-color:#1877f2;
-  color:#fff;
-}
-.x-btn{
-  background:#0f172a;
-  border-color:#0f172a;
-  color:#fff;
-}
-body.dark .x-btn{
-  background:#334155;
-  border-color:#475569;
-}
-.share-all-btn{
-  background:var(--page);
-  color:var(--ink);
-}
+.wa-btn{background:#25d366;border-color:#25d366;color:#fff}
+.fb-btn{background:#1877f2;border-color:#1877f2;color:#fff}
+.x-btn{background:#0f172a;border-color:#0f172a;color:#fff}
+body.dark .x-btn{background:#334155;border-color:#475569}
 
 .card-foot{
   display:flex;
@@ -375,33 +344,31 @@ body.dark .x-btn{
   font-weight:700;
   cursor:pointer;
 }
-.read-btn:hover{opacity:.92}
 
-/* Reader Modal */
+/* Full In-Site Article Reader */
 .modal-backdrop{
   position:fixed;
   inset:0;
-  background:rgba(9,17,36,0.72);
-  backdrop-filter:blur(4px);
+  background:rgba(9,17,36,0.78);
+  backdrop-filter:blur(5px);
   z-index:50;
   display:none;
   align-items:center;
   justify-content:center;
-  padding:16px;
+  padding:12px;
 }
 .modal-backdrop.open{display:flex}
 .modal-box{
   width:100%;
-  max-width:720px;
-  max-height:88vh;
+  max-width:780px;
+  max-height:92vh;
   overflow-y:auto;
   background:var(--card);
   color:var(--ink);
   border:1px solid var(--line);
   border-radius:22px;
-  box-shadow:0 24px 60px rgba(0,0,0,0.4);
+  box-shadow:0 24px 60px rgba(0,0,0,0.45);
   padding:20px;
-  position:relative;
 }
 .modal-top{
   display:flex;
@@ -409,58 +376,71 @@ body.dark .x-btn{
   align-items:center;
   gap:10px;
   margin-bottom:14px;
+  position:sticky;
+  top:0;
+  background:var(--card);
+  padding:4px 0 10px;
+  z-index:5;
+  border-bottom:1px solid var(--line);
 }
-.close-btn{
+.back-btn{
   border:1px solid var(--line);
   background:var(--page);
   color:var(--ink);
-  width:36px;
-  height:36px;
-  border-radius:999px;
-  font-size:18px;
+  border-radius:10px;
+  padding:7px 13px;
+  font:inherit;
+  font-size:13px;
   font-weight:700;
   cursor:pointer;
-  display:grid;
-  place-items:center;
 }
 .modal-img{
   width:100%;
-  max-height:280px;
+  max-height:340px;
   object-fit:cover;
-  border-radius:14px;
+  border-radius:16px;
   margin-bottom:14px;
 }
 .modal-title{
-  margin:0 0 12px;
-  font-size:22px;
+  margin:0 0 14px;
+  font-size:23px;
   line-height:1.5;
   font-weight:800;
 }
 .modal-text{
-  margin:0 0 16px;
-  font-size:15px;
-  line-height:1.85;
+  margin:0 0 18px;
+  font-size:15.5px;
+  line-height:1.9;
   color:var(--ink);
   white-space:pre-line;
 }
-.modal-actions{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-  padding-top:14px;
+.related-box{
+  margin-top:18px;
+  padding-top:16px;
   border-top:1px solid var(--line);
 }
-.ext-link{
-  color:#0a7cff;
-  font-size:13px;
-  font-weight:700;
-  text-decoration:none;
+.related-box h3{
+  margin:0 0 10px;
+  font-size:16px;
+  font-weight:800;
 }
-body.dark .ext-link{color:#7dd3fc}
-
-/* Toast message */
+.related-list{
+  display:grid;
+  gap:8px;
+}
+.related-item{
+  text-align:left;
+  width:100%;
+  border:1px solid var(--line);
+  background:var(--page);
+  color:var(--ink);
+  border-radius:12px;
+  padding:10px 12px;
+  font:inherit;
+  font-size:13.5px;
+  font-weight:700;
+  cursor:pointer;
+}
 .toast{
   position:fixed;
   bottom:22px;
@@ -472,17 +452,12 @@ body.dark .ext-link{color:#7dd3fc}
   border-radius:999px;
   font-size:13px;
   font-weight:700;
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
   opacity:0;
   pointer-events:none;
   transition:opacity .25s ease,transform .25s ease;
   z-index:80;
 }
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{
   background:var(--card);
   border:1px solid var(--line);
@@ -568,35 +543,35 @@ footer{
   </section>
 </main>
 
-<!-- In-page News Reader Modal -->
+<!-- Full In-Site Article Reader (No external site redirect) -->
 <div class="modal-backdrop" id="readerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-box">
+  <div class="modal-box" id="modalBox">
     <div class="modal-top">
+      <button class="back-btn" id="closeModal" type="button">← முகப்புக்குத் திரும்பு</button>
       <span class="pill" id="modalCat">செய்தி</span>
-      <button class="close-btn" id="closeModal" type="button" aria-label="மூடு">×</button>
     </div>
     <img class="modal-img" id="modalImg" alt="" style="display:none">
     <div class="meta">
-      <span id="modalSrc">மூலம்</span>
+      <span id="modalSrc">AI Tamil News</span>
       <time id="modalDate"></time>
     </div>
     <h2 class="modal-title" id="modalTitle"></h2>
-    <p class="modal-text" id="modalText"></p>
+    <div class="modal-text" id="modalText"></div>
     <div class="social-bar" id="modalSocialBar"></div>
-    <div class="modal-actions">
-      <a class="ext-link" id="modalExtLink" href="#" target="_blank" rel="noopener noreferrer">மூல இணையதளத்தில் திறக்க ↗</a>
-      <button class="read-btn" id="closeModalBottom" type="button">படித்து முடித்தேன்</button>
+    <div class="related-box" id="relatedBox">
+      <h3>இதே பிரிவில் மேலும் செய்திகள்</h3>
+      <div class="related-list" id="relatedList"></div>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<footer>© 2026 AI Tamil News · செய்திகள் நம் தளத்திலேயே வாசிக்கும் வசதியுடன் வழங்கப்பட்டுள்ளன.</footer>
+<footer>© 2026 AI Tamil News · அனைத்துச் செய்திகளும் நம் தளத்திலேயே முழுமையாகப் படிக்கும் வசதியுடன் வழங்கப்பட்டுள்ளன.</footer>
 
 <script>
 const list=document.getElementById('newsList'),featuredWrap=document.getElementById('featuredWrap'),search=document.getElementById('search'),themeBtn=document.getElementById('themeBtn');
-const modal=document.getElementById('readerModal'),closeModal=document.getElementById('closeModal'),closeModalBottom=document.getElementById('closeModalBottom'),toastEl=document.getElementById('toast');
+const modal=document.getElementById('readerModal'),modalBox=document.getElementById('modalBox'),closeModal=document.getElementById('closeModal'),toastEl=document.getElementById('toast');
 let articles=[],selected='அனைத்தும்',toastTimer=null;
 
 const catThemes={
@@ -638,7 +613,7 @@ function cleanTitle(raw,source){
 }
 
 function getArticleKey(a){
-  return 'aitn_like_'+(a.url||a.title||'item').slice(0,120);
+  return 'aitn_like_'+(a.title||'item').slice(0,120);
 }
 
 function getLikeState(a){
@@ -681,7 +656,8 @@ function createSocialBar(a,onSync){
     likeBtn.textContent=(s.liked?'❤️ ':'🤍 ')+s.count;
   };
   updateLikeUi(st);
-  likeBtn.addEventListener('click',()=>{
+  likeBtn.addEventListener('click',e=>{
+    e.stopPropagation();
     const next=toggleLike(a);
     updateLikeUi(next);
     if(onSync)onSync();
@@ -691,7 +667,8 @@ function createSocialBar(a,onSync){
   waBtn.type='button';
   waBtn.className='act-btn wa-btn';
   waBtn.textContent='WhatsApp';
-  waBtn.addEventListener('click',()=>{
+  waBtn.addEventListener('click',e=>{
+    e.stopPropagation();
     const {text}=sharePayload(a);
     window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text),'_blank','noopener,noreferrer');
   });
@@ -700,7 +677,8 @@ function createSocialBar(a,onSync){
   fbBtn.type='button';
   fbBtn.className='act-btn fb-btn';
   fbBtn.textContent='Facebook';
-  fbBtn.addEventListener('click',()=>{
+  fbBtn.addEventListener('click',e=>{
+    e.stopPropagation();
     const {title,siteUrl}=sharePayload(a);
     window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(siteUrl)+'&quote='+encodeURIComponent(title),'_blank','noopener,noreferrer');
   });
@@ -709,17 +687,18 @@ function createSocialBar(a,onSync){
   xBtn.type='button';
   xBtn.className='act-btn x-btn';
   xBtn.textContent='𝕏';
-  xBtn.title='X (Twitter)-ல் பகிர்';
-  xBtn.addEventListener('click',()=>{
+  xBtn.addEventListener('click',e=>{
+    e.stopPropagation();
     const {title,siteUrl}=sharePayload(a);
     window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(title)+'&url='+encodeURIComponent(siteUrl),'_blank','noopener,noreferrer');
   });
 
   const allBtn=document.createElement('button');
   allBtn.type='button';
-  allBtn.className='act-btn share-all-btn';
+  allBtn.className='act-btn';
   allBtn.textContent='📤 பகிர்';
-  allBtn.addEventListener('click',async()=>{
+  allBtn.addEventListener('click',async e=>{
+    e.stopPropagation();
     const {title,siteUrl,text}=sharePayload(a);
     if(navigator.share){
       try{
@@ -731,9 +710,9 @@ function createSocialBar(a,onSync){
     }
     try{
       await navigator.clipboard.writeText(text);
-      showToast('📋 செய்தி இணைப்பு நகலெடுக்கப்பட்டது! எங்கும் Paste செய்து பகிரலாம்');
+      showToast('📋 செய்தி இணைப்பு நகலெடுக்கப்பட்டது!');
     }catch{
-      showToast('பகிர்வதற்கு WhatsApp அல்லது Facebook பொத்தானைத் தட்டவும்');
+      showToast('WhatsApp அல்லது Facebook பொத்தானைத் தட்டிப் பகிரவும்');
     }
   });
 
@@ -745,10 +724,12 @@ function openReader(a){
   const title=cleanTitle(a.title,a.source);
   const dateText=a.publishedAt?new Intl.DateTimeFormat('ta-LK',{day:'numeric',month:'long',year:'numeric'}).format(new Date(a.publishedAt)):'இன்று';
   document.getElementById('modalCat').textContent=a.category||'செய்தி';
-  document.getElementById('modalSrc').textContent='மூலம்: '+(a.source||'Google News');
+  document.getElementById('modalSrc').textContent='AI Tamil News · '+(a.source||'நேரடி செய்தி');
   document.getElementById('modalDate').textContent=dateText;
   document.getElementById('modalTitle').textContent=title;
-  document.getElementById('modalText').textContent=a.description||title;
+
+  const fullBody=(a.content&&a.content.trim())||(a.description&&a.description.trim())||title;
+  document.getElementById('modalText').textContent=fullBody;
 
   const modalSocial=document.getElementById('modalSocialBar');
   modalSocial.replaceWith(createSocialBar(a,()=>render()));
@@ -765,24 +746,25 @@ function openReader(a){
     modalImg.style.display='none';
   }
 
-  const extLink=document.getElementById('modalExtLink');
-  const url=safeUrl(a.url);
-  if(url){
-    extLink.href=url;
-    extLink.style.display='inline-flex';
-  }else{
-    extLink.style.display='none';
-  }
+  const relatedList=document.getElementById('relatedList');
+  relatedList.replaceChildren();
+  const related=articles.filter(x=>x!==a&&x.category===a.category).slice(0,4);
+  document.getElementById('relatedBox').style.display=related.length?'block':'none';
+  related.forEach(item=>{
+    const rb=document.createElement('button');
+    rb.type='button';
+    rb.className='related-item';
+    rb.textContent='▸ '+cleanTitle(item.title,item.source);
+    rb.addEventListener('click',()=>openReader(item));
+    relatedList.append(rb);
+  });
 
   modal.classList.add('open');
+  modalBox.scrollTop=0;
 }
 
-function hideReader(){
-  modal.classList.remove('open');
-}
-
+function hideReader(){modal.classList.remove('open')}
 closeModal.addEventListener('click',hideReader);
-closeModalBottom.addEventListener('click',hideReader);
 modal.addEventListener('click',e=>{if(e.target===modal)hideReader()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')hideReader()});
 
@@ -803,12 +785,19 @@ function buildCard(a,isFeatured){
     const img=document.createElement('img');
     img.className='card-media';
     img.src=imgUrl;
-    img.alt=a.title||'செய்திப் படம்';
+    img.alt=cleanTitle(a.title,a.source);
     img.loading='lazy';
-    img.onerror=()=>img.replaceWith(createFallback(a.category));
+    img.addEventListener('click',()=>openReader(a));
+    img.onerror=()=>{
+      const fb=createFallback(a.category);
+      fb.addEventListener('click',()=>openReader(a));
+      img.replaceWith(fb);
+    };
     card.append(img);
   }else{
-    card.append(createFallback(a.category));
+    const fb=createFallback(a.category);
+    fb.addEventListener('click',()=>openReader(a));
+    card.append(fb);
   }
 
   const body=document.createElement('div');
@@ -831,10 +820,12 @@ function buildCard(a,isFeatured){
   h.addEventListener('click',()=>openReader(a));
   body.append(h);
 
-  if(a.description){
+  const shortDesc=cleanTitle(a.description,a.source);
+  if(shortDesc){
     const p=document.createElement('p');
     p.className='summary';
-    p.textContent=a.description;
+    p.textContent=shortDesc;
+    p.addEventListener('click',()=>openReader(a));
     body.append(p);
   }
 
@@ -844,13 +835,13 @@ function buildCard(a,isFeatured){
   foot.className='card-foot';
   const src=document.createElement('span');
   src.className='source';
-  src.textContent=a.source||'Google News';
+  src.textContent=a.source||'AI Tamil News';
   foot.append(src);
 
   const btn=document.createElement('button');
   btn.type='button';
   btn.className='read-btn';
-  btn.textContent='இங்கேயே படிக்க';
+  btn.textContent='முழுச் செய்தி படிக்க';
   btn.addEventListener('click',()=>openReader(a));
   foot.append(btn);
 
@@ -863,7 +854,7 @@ function render(){
   const q=search.value.trim().toLocaleLowerCase();
   const data=articles.filter(a=>
     (selected==='அனைத்தும்'||a.category===selected)&&
-    ((a.title||'')+' '+(a.description||'')+' '+(a.source||'')).toLocaleLowerCase().includes(q)
+    ((a.title||'')+' '+(a.description||'')+' '+(a.content||'')+' '+(a.source||'')).toLocaleLowerCase().includes(q)
   );
   document.getElementById('count').textContent=data.length+' செய்திகள்';
   featuredWrap.replaceChildren();
