@@ -284,6 +284,7 @@ body.dark .ticker{color:#fda4af}
   font-size:20px;
   line-height:1.5;
   font-weight:800;
+  cursor:pointer;
 }
 .summary{
   margin:0 0 15px;
@@ -301,20 +302,105 @@ body.dark .ticker{color:#fda4af}
   border-top:1px solid var(--line);
 }
 .source{font-size:12px;color:var(--muted);font-weight:700}
-.read{
+.read-btn{
   display:inline-flex;
   align-items:center;
   gap:5px;
-  background:var(--page);
-  border:1px solid var(--line);
+  background:linear-gradient(135deg,#0a7cff,#4f46e5);
+  border:none;
   border-radius:10px;
-  padding:7px 13px;
-  color:var(--ink);
-  text-decoration:none;
+  padding:8px 14px;
+  color:#fff;
+  font:inherit;
   font-size:12.5px;
   font-weight:700;
+  cursor:pointer;
 }
-.read:hover{background:#0a7cff;color:#fff;border-color:#0a7cff}
+.read-btn:hover{opacity:.92}
+
+/* Reader Modal */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(9,17,36,0.72);
+  backdrop-filter:blur(4px);
+  z-index:50;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+.modal-backdrop.open{display:flex}
+.modal-box{
+  width:100%;
+  max-width:720px;
+  max-height:88vh;
+  overflow-y:auto;
+  background:var(--card);
+  color:var(--ink);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.4);
+  padding:20px;
+  position:relative;
+}
+.modal-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.close-btn{
+  border:1px solid var(--line);
+  background:var(--page);
+  color:var(--ink);
+  width:36px;
+  height:36px;
+  border-radius:999px;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+}
+.modal-img{
+  width:100%;
+  max-height:280px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-bottom:14px;
+}
+.modal-title{
+  margin:0 0 12px;
+  font-size:22px;
+  line-height:1.5;
+  font-weight:800;
+}
+.modal-text{
+  margin:0 0 18px;
+  font-size:15px;
+  line-height:1.85;
+  color:var(--ink);
+  white-space:pre-line;
+}
+.modal-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+.ext-link{
+  color:#0a7cff;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+}
+body.dark .ext-link{color:#7dd3fc}
+
 .empty{
   background:var(--card);
   border:1px solid var(--line);
@@ -400,10 +486,32 @@ footer{
   </section>
 </main>
 
-<footer>© 2026 AI Tamil News · செய்திகளின் மூல இணைப்புகள் ஒவ்வொரு கட்டுரையிலும் வழங்கப்பட்டுள்ளன.</footer>
+<!-- In-page News Reader Modal -->
+<div class="modal-backdrop" id="readerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <div class="modal-top">
+      <span class="pill" id="modalCat">செய்தி</span>
+      <button class="close-btn" id="closeModal" type="button" aria-label="மூடு">×</button>
+    </div>
+    <img class="modal-img" id="modalImg" alt="" style="display:none">
+    <div class="meta">
+      <span id="modalSrc">மூலம்</span>
+      <time id="modalDate"></time>
+    </div>
+    <h2 class="modal-title" id="modalTitle"></h2>
+    <p class="modal-text" id="modalText"></p>
+    <div class="modal-actions">
+      <a class="ext-link" id="modalExtLink" href="#" target="_blank" rel="noopener noreferrer">மூல இணையதளத்தில் திறக்க ↗</a>
+      <button class="read-btn" id="closeModalBottom" type="button">படித்து முடித்தேன்</button>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 AI Tamil News · செய்திகள் நம் தளத்திலேயே வாசிக்கும் வசதியுடன் வழங்கப்பட்டுள்ளன.</footer>
 
 <script>
 const list=document.getElementById('newsList'),featuredWrap=document.getElementById('featuredWrap'),search=document.getElementById('search'),themeBtn=document.getElementById('themeBtn');
+const modal=document.getElementById('readerModal'),closeModal=document.getElementById('closeModal'),closeModalBottom=document.getElementById('closeModalBottom');
 let articles=[],selected='அனைத்தும்';
 
 const catThemes={
@@ -436,6 +544,47 @@ function cleanTitle(raw,source){
   t=t.replace(/\s*[-–—|]\s*[A-Za-z0-9._-]+(\.[A-Za-z]{2,})?\s*$/,'').trim();
   return t||'தலைப்பு இல்லை';
 }
+
+function openReader(a){
+  const title=cleanTitle(a.title,a.source);
+  const dateText=a.publishedAt?new Intl.DateTimeFormat('ta-LK',{day:'numeric',month:'long',year:'numeric'}).format(new Date(a.publishedAt)):'இன்று';
+  document.getElementById('modalCat').textContent=a.category||'செய்தி';
+  document.getElementById('modalSrc').textContent='மூலம்: '+(a.source||'Google News');
+  document.getElementById('modalDate').textContent=dateText;
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalText').textContent=a.description||title;
+
+  const modalImg=document.getElementById('modalImg');
+  const imgUrl=safeUrl(a.image);
+  if(imgUrl){
+    modalImg.src=imgUrl;
+    modalImg.alt=title;
+    modalImg.style.display='block';
+    modalImg.onerror=()=>{modalImg.style.display='none'};
+  }else{
+    modalImg.style.display='none';
+  }
+
+  const extLink=document.getElementById('modalExtLink');
+  const url=safeUrl(a.url);
+  if(url){
+    extLink.href=url;
+    extLink.style.display='inline-flex';
+  }else{
+    extLink.style.display='none';
+  }
+
+  modal.classList.add('open');
+}
+
+function hideReader(){
+  modal.classList.remove('open');
+}
+
+closeModal.addEventListener('click',hideReader);
+closeModalBottom.addEventListener('click',hideReader);
+modal.addEventListener('click',e=>{if(e.target===modal)hideReader()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideReader()});
 
 function createFallback(cat){
   const box=document.createElement('div');
@@ -479,6 +628,7 @@ function buildCard(a,isFeatured){
   const h=document.createElement('h3');
   h.className='headline';
   h.textContent=titleText;
+  h.addEventListener('click',()=>openReader(a));
   body.append(h);
 
   if(a.description){
@@ -495,16 +645,12 @@ function buildCard(a,isFeatured){
   src.textContent=a.source||'Google News';
   foot.append(src);
 
-  const url=safeUrl(a.url);
-  if(url){
-    const link=document.createElement('a');
-    link.className='read';
-    link.href=url;
-    link.target='_blank';
-    link.rel='noopener noreferrer';
-    link.textContent='மேலும் படிக்க ↗';
-    foot.append(link);
-  }
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.className='read-btn';
+  btn.textContent='இங்கேயே படிக்க';
+  btn.addEventListener('click',()=>openReader(a));
+  foot.append(btn);
 
   body.append(foot);
   card.append(body);
