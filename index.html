@@ -159,42 +159,9 @@ body.dark .ticker{color:#fda4af}
 }
 .cover-img{
   width:100%;
-  height:250px;
+  height:230px;
   object-fit:cover;
   display:block;
-}
-.cover-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(9,17,36,0.92) 12%,rgba(9,17,36,0.3) 65%,rgba(9,17,36,0.08));
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  padding:20px 22px;
-}
-.cover-chip{
-  display:inline-block;
-  width:fit-content;
-  background:rgba(255,255,255,0.16);
-  backdrop-filter:blur(6px);
-  border:1px solid rgba(255,255,255,0.28);
-  color:#fff;
-  font-size:12px;
-  font-weight:700;
-  padding:4px 11px;
-  border-radius:999px;
-  margin-bottom:8px;
-}
-.cover-title{
-  margin:0 0 5px;
-  color:#fff;
-  font-size:22px;
-  font-weight:800;
-  line-height:1.35;
-}
-.cover-sub{
-  margin:0;
-  color:#e2e8f0;
-  font-size:13.5px;
 }
 .controls{
   display:grid;
@@ -366,8 +333,7 @@ footer{
   margin-top:26px;
 }
 @media(min-width:700px){
-  .cover-img{height:310px}
-  .cover-title{font-size:27px}
+  .cover-img{height:290px}
   .news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .featured-card{display:grid;grid-template-columns:1.15fr 1fr}
   .featured-card .card-media,.featured-card .card-fallback{height:100%;min-height:260px}
@@ -407,13 +373,8 @@ footer{
       class="cover-img"
       src="./cover.jpg"
       alt="AI Tamil News முகப்புப் படம்"
-      onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22980%22 height=%22310%22 viewBox=%220 0 980 310%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%25%22 stop-color=%22%23091124%22/><stop offset=%2255%25%22 stop-color=%22%231d4ed8%22/><stop offset=%22100%25%22 stop-color=%22%234f46e5%22/></linearGradient></defs><rect width=%22980%22 height=%22310%22 fill=%22url(%23g)%22/><circle cx=%22830%22 cy=%2270%22 r=%22130%22 fill=%22%23ffffff%22 fill-opacity=%220.08%22/><circle cx=%22140%22 cy=%22260%22 r=%22150%22 fill=%22%2338bdf8%22 fill-opacity=%220.12%22/></svg>';"
+      onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22980%22 height=%22290%22 viewBox=%220 0 980 290%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%25%22 stop-color=%22%23091124%22/><stop offset=%2255%25%22 stop-color=%22%231d4ed8%22/><stop offset=%22100%25%22 stop-color=%22%234f46e5%22/></linearGradient></defs><rect width=%22980%22 height=%22290%22 fill=%22url(%23g)%22/></svg>';"
     >
-    <div class="cover-overlay">
-      <span class="cover-chip">24×7 உடனுக்குடன் செய்திகள்</span>
-      <h2 class="cover-title">உலகெங்கும் உள்ள தமிழ் செய்திகள் ஒரே இடத்தில்</h2>
-      <p class="cover-sub">இலங்கை · தமிழகம் · உலகம் · விளையாட்டு · சினிமா</p>
-    </div>
   </section>
 
   <div class="controls">
@@ -466,6 +427,16 @@ function safeUrl(v){
   try{let u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}
 }
 
+function cleanTitle(raw,source){
+  let t=(raw||'தலைப்பு இல்லை').trim();
+  if(source){
+    const esc=source.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    t=t.replace(new RegExp('\\s*[-–—|]\\s*'+esc+'\\s*$','i'),'').trim();
+  }
+  t=t.replace(/\s*[-–—|]\s*[A-Za-z0-9._-]+(\.[A-Za-z]{2,})?\s*$/,'').trim();
+  return t||'தலைப்பு இல்லை';
+}
+
 function createFallback(cat){
   const box=document.createElement('div');
   box.className='card-fallback';
@@ -504,9 +475,10 @@ function buildCard(a,isFeatured){
   meta.append(pill,date);
   body.append(meta);
 
+  const titleText=cleanTitle(a.title,a.source);
   const h=document.createElement('h3');
   h.className='headline';
-  h.textContent=a.title||'தலைப்பு இல்லை';
+  h.textContent=titleText;
   body.append(h);
 
   if(a.description){
@@ -577,7 +549,7 @@ async function load(){
     if(!Array.isArray(d)||!d.length)throw Error('empty');
     articles=d;
     render();
-    document.getElementById('ticker').textContent=articles[0].title||'புதிய செய்திகள்';
+    document.getElementById('ticker').textContent=cleanTitle(articles[0].title,articles[0].source)||'புதிய செய்திகள்';
   }catch(e){
     list.innerHTML='<div class="empty">இன்னும் செய்தித் தரவு உருவாக்கப்படவில்லை. GitHub Actions செயல்பட்டதும் செய்திகள் இங்கே தோன்றும்.</div>';
     document.getElementById('count').textContent='0 செய்திகள்';
