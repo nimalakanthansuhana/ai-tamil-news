@@ -287,12 +287,71 @@ body.dark .ticker{color:#fda4af}
   cursor:pointer;
 }
 .summary{
-  margin:0 0 15px;
+  margin:0 0 14px;
   font-size:14px;
   line-height:1.75;
   color:var(--muted);
   flex:1;
 }
+
+/* Social & Like Bar */
+.social-bar{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-bottom:12px;
+}
+.act-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  border:1px solid var(--line);
+  background:var(--page);
+  color:var(--ink);
+  border-radius:999px;
+  padding:6px 11px;
+  font:inherit;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .15s ease,background .2s ease,color .2s ease;
+}
+.act-btn:active{transform:scale(0.95)}
+.like-btn.liked{
+  background:#ffe4e6;
+  border-color:#fda4af;
+  color:#e11d48;
+}
+body.dark .like-btn.liked{
+  background:rgba(225,29,72,0.22);
+  border-color:#fb7185;
+  color:#fda4af;
+}
+.wa-btn{
+  background:#25d366;
+  border-color:#25d366;
+  color:#fff;
+}
+.fb-btn{
+  background:#1877f2;
+  border-color:#1877f2;
+  color:#fff;
+}
+.x-btn{
+  background:#0f172a;
+  border-color:#0f172a;
+  color:#fff;
+}
+body.dark .x-btn{
+  background:#334155;
+  border-color:#475569;
+}
+.share-all-btn{
+  background:var(--page);
+  color:var(--ink);
+}
+
 .card-foot{
   display:flex;
   justify-content:space-between;
@@ -378,7 +437,7 @@ body.dark .ticker{color:#fda4af}
   font-weight:800;
 }
 .modal-text{
-  margin:0 0 18px;
+  margin:0 0 16px;
   font-size:15px;
   line-height:1.85;
   color:var(--ink);
@@ -400,6 +459,29 @@ body.dark .ticker{color:#fda4af}
   text-decoration:none;
 }
 body.dark .ext-link{color:#7dd3fc}
+
+/* Toast message */
+.toast{
+  position:fixed;
+  bottom:22px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#091124;
+  color:#fff;
+  padding:10px 18px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;
+  z-index:80;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
 
 .empty{
   background:var(--card);
@@ -500,6 +582,7 @@ footer{
     </div>
     <h2 class="modal-title" id="modalTitle"></h2>
     <p class="modal-text" id="modalText"></p>
+    <div class="social-bar" id="modalSocialBar"></div>
     <div class="modal-actions">
       <a class="ext-link" id="modalExtLink" href="#" target="_blank" rel="noopener noreferrer">மூல இணையதளத்தில் திறக்க ↗</a>
       <button class="read-btn" id="closeModalBottom" type="button">படித்து முடித்தேன்</button>
@@ -507,12 +590,14 @@ footer{
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <footer>© 2026 AI Tamil News · செய்திகள் நம் தளத்திலேயே வாசிக்கும் வசதியுடன் வழங்கப்பட்டுள்ளன.</footer>
 
 <script>
 const list=document.getElementById('newsList'),featuredWrap=document.getElementById('featuredWrap'),search=document.getElementById('search'),themeBtn=document.getElementById('themeBtn');
-const modal=document.getElementById('readerModal'),closeModal=document.getElementById('closeModal'),closeModalBottom=document.getElementById('closeModalBottom');
-let articles=[],selected='அனைத்தும்';
+const modal=document.getElementById('readerModal'),closeModal=document.getElementById('closeModal'),closeModalBottom=document.getElementById('closeModalBottom'),toastEl=document.getElementById('toast');
+let articles=[],selected='அனைத்தும்',toastTimer=null;
 
 const catThemes={
   'இலங்கை':'linear-gradient(135deg,#0f766e,#0284c7)',
@@ -531,6 +616,13 @@ themeBtn.addEventListener('click',()=>{
   themeBtn.textContent=document.body.classList.contains('dark')?'☀️ பகல்':'🌙 இரவு';
 });
 
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2400);
+}
+
 function safeUrl(v){
   try{let u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}
 }
@@ -545,6 +637,110 @@ function cleanTitle(raw,source){
   return t||'தலைப்பு இல்லை';
 }
 
+function getArticleKey(a){
+  return 'aitn_like_'+(a.url||a.title||'item').slice(0,120);
+}
+
+function getLikeState(a){
+  try{
+    const raw=localStorage.getItem(getArticleKey(a));
+    if(raw)return JSON.parse(raw);
+  }catch{}
+  let hash=0;
+  const s=(a.title||'news');
+  for(let i=0;i<s.length;i++)hash=(hash*31+s.charCodeAt(i))%47;
+  return {liked:false,count:12+Math.abs(hash)};
+}
+
+function toggleLike(a){
+  const st=getLikeState(a);
+  st.liked=!st.liked;
+  st.count=Math.max(0,st.count+(st.liked?1:-1));
+  try{localStorage.setItem(getArticleKey(a),JSON.stringify(st))}catch{}
+  showToast(st.liked?'❤️ செய்திக்கு விருப்பம் தெரிவித்தீர்கள்':'விருப்பம் நீக்கப்பட்டது');
+  return st;
+}
+
+function sharePayload(a){
+  const title=cleanTitle(a.title,a.source);
+  const siteUrl=window.location.href.split('#')[0];
+  const text=`📰 ${title}\n\nமேலும் தமிழ் செய்திகளுக்கு: ${siteUrl}`;
+  return {title,siteUrl,text};
+}
+
+function createSocialBar(a,onSync){
+  const bar=document.createElement('div');
+  bar.className='social-bar';
+
+  const st=getLikeState(a);
+  const likeBtn=document.createElement('button');
+  likeBtn.type='button';
+  likeBtn.className='act-btn like-btn'+(st.liked?' liked':'');
+  const updateLikeUi=(s)=>{
+    likeBtn.className='act-btn like-btn'+(s.liked?' liked':'');
+    likeBtn.textContent=(s.liked?'❤️ ':'🤍 ')+s.count;
+  };
+  updateLikeUi(st);
+  likeBtn.addEventListener('click',()=>{
+    const next=toggleLike(a);
+    updateLikeUi(next);
+    if(onSync)onSync();
+  });
+
+  const waBtn=document.createElement('button');
+  waBtn.type='button';
+  waBtn.className='act-btn wa-btn';
+  waBtn.textContent='WhatsApp';
+  waBtn.addEventListener('click',()=>{
+    const {text}=sharePayload(a);
+    window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text),'_blank','noopener,noreferrer');
+  });
+
+  const fbBtn=document.createElement('button');
+  fbBtn.type='button';
+  fbBtn.className='act-btn fb-btn';
+  fbBtn.textContent='Facebook';
+  fbBtn.addEventListener('click',()=>{
+    const {title,siteUrl}=sharePayload(a);
+    window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(siteUrl)+'&quote='+encodeURIComponent(title),'_blank','noopener,noreferrer');
+  });
+
+  const xBtn=document.createElement('button');
+  xBtn.type='button';
+  xBtn.className='act-btn x-btn';
+  xBtn.textContent='𝕏';
+  xBtn.title='X (Twitter)-ல் பகிர்';
+  xBtn.addEventListener('click',()=>{
+    const {title,siteUrl}=sharePayload(a);
+    window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(title)+'&url='+encodeURIComponent(siteUrl),'_blank','noopener,noreferrer');
+  });
+
+  const allBtn=document.createElement('button');
+  allBtn.type='button';
+  allBtn.className='act-btn share-all-btn';
+  allBtn.textContent='📤 பகிர்';
+  allBtn.addEventListener('click',async()=>{
+    const {title,siteUrl,text}=sharePayload(a);
+    if(navigator.share){
+      try{
+        await navigator.share({title:'AI Tamil News: '+title,text,url:siteUrl});
+        return;
+      }catch(err){
+        if(err&&err.name==='AbortError')return;
+      }
+    }
+    try{
+      await navigator.clipboard.writeText(text);
+      showToast('📋 செய்தி இணைப்பு நகலெடுக்கப்பட்டது! எங்கும் Paste செய்து பகிரலாம்');
+    }catch{
+      showToast('பகிர்வதற்கு WhatsApp அல்லது Facebook பொத்தானைத் தட்டவும்');
+    }
+  });
+
+  bar.append(likeBtn,waBtn,fbBtn,xBtn,allBtn);
+  return bar;
+}
+
 function openReader(a){
   const title=cleanTitle(a.title,a.source);
   const dateText=a.publishedAt?new Intl.DateTimeFormat('ta-LK',{day:'numeric',month:'long',year:'numeric'}).format(new Date(a.publishedAt)):'இன்று';
@@ -553,6 +749,10 @@ function openReader(a){
   document.getElementById('modalDate').textContent=dateText;
   document.getElementById('modalTitle').textContent=title;
   document.getElementById('modalText').textContent=a.description||title;
+
+  const modalSocial=document.getElementById('modalSocialBar');
+  modalSocial.replaceWith(createSocialBar(a,()=>render()));
+  document.querySelector('#readerModal .social-bar').id='modalSocialBar';
 
   const modalImg=document.getElementById('modalImg');
   const imgUrl=safeUrl(a.image);
@@ -637,6 +837,8 @@ function buildCard(a,isFeatured){
     p.textContent=a.description;
     body.append(p);
   }
+
+  body.append(createSocialBar(a));
 
   const foot=document.createElement('div');
   foot.className='card-foot';
