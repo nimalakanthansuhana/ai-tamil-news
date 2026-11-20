@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1428" />
+  <title>AI Tamil News</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#0b1428;--blue:#1687ed;--purple:#5b5cf4;--red:#e5282d;--ink:#101a31;--muted:#53627e;--page:#f2f5fa;--line:#dce4ef}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:'Noto Sans Tamil',system-ui,sans-serif}
+    .top{background:var(--navy);color:#fff;padding:9px 19px 10px}
+    .live{display:inline-flex;align-items:center;gap:7px;border:1px solid #74343e;background:#321d2b;color:#ffb2b4;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700}
+    .live:before{content:'';width:8px;height:8px;background:#ef4b51;border-radius:50%;box-shadow:0 0 0 3px #5a2c38}
+    .date{font-size:12px;color:#d0d8e7;margin-top:8px}
+    .brand{background:#fff;padding:17px 19px 13px;border-bottom:1px solid #e4e9f1}
+    .brandrow{display:flex;align-items:center;gap:12px}
+    .logo{width:45px;height:45px;border-radius:13px;background:linear-gradient(135deg,#0ba8ed,#6459f3);display:grid;place-items:center;color:white;font-size:25px;box-shadow:0 5px 14px #1687ed35}
+    h1{font-family:Arial,sans-serif;color:#0877df;font-size:20px;margin:0 0 2px;font-weight:800}
+    .tagline{font-size:12px;color:#43516b}
+    .admin{margin-top:15px;border:0;border-radius:10px;padding:8px 13px;color:white;font:700 13px inherit;background:linear-gradient(100deg,#0aa5e9,#5c5cf4);cursor:pointer}
+    .breaking{background:#fff;display:flex;align-items:center;justify-content:space-between;padding:9px 19px;border-bottom:1px solid #e7ebf2;font-size:13px;gap:10px}
+    .breaking strong{background:var(--red);color:white;border-radius:5px;padding:3px 9px;font-size:12px;white-space:nowrap}
+    .breaking span{color:#a90016;font-weight:700;white-space:nowrap}
+    main{max-width:760px;margin:auto;padding:17px 19px 28px}
+    .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+    .filter{border:1px solid #dce4ee;background:#fff;color:#34425c;border-radius:20px;padding:6px 14px;font:500 13px inherit;cursor:pointer}
+    .filter.active{background:#101a30;color:#fff;border-color:#101a30;font-weight:700}
+    .search{width:100%;height:39px;border:1px solid #dce4ee;background:#fff;border-radius:11px;padding:0 13px;font:13px inherit;color:#17223b;outline:none;margin-bottom:17px}
+    .search:focus{border-color:#2689ed;box-shadow:0 0 0 3px #1687ed18}
+    .sectionhead{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px}
+    .sectionhead h2{font-size:18px;margin:0;font-weight:800}
+    .count{font-size:12px;color:#52617d}
+    .news-list{display:grid;gap:19px}
+    .news-card{background:#fff;border:1px solid #e1e7f0;border-radius:15px;padding:15px;box-shadow:0 8px 20px #1829470a;min-height:485px;display:flex;flex-direction:column}
+    .photo{height:165px;width:100%;border-radius:9px;background:#fff;margin-bottom:20px;flex:none}
+    .meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px;font-size:11px;color:#53617c}
+    .pills{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .pill{border-radius:15px;padding:3px 9px;font-weight:700}
+    .pill.category{background:#e0f2ff;color:#087bc4}
+    .pill.important{background:#ffe5e6;color:#d51f2c}
+    .headline{font-size:17px;line-height:1.55;font-weight:800;margin:0 0 7px;color:#101a31}
+    .summary{font-size:13px;line-height:1.75;color:#53627d;margin:0 0 10px}
+    .read{align-self:flex-start;margin-top:auto;border:1px solid #dce4ee;border-radius:7px;background:#fff;color:#15213a;padding:5px 10px;font:600 11px inherit;cursor:pointer}
+    .read:hover{background:#f2f7ff;border-color:#9ec8f4}
+    .empty{background:#fff;padding:25px;border-radius:12px;text-align:center;color:#64718a}
+    footer{background:var(--navy);color:#aab5c8;text-align:center;padding:17px 15px;font-size:12px;line-height:1.8}
+    .modal{position:fixed;inset:0;background:#071124a8;display:none;align-items:center;justify-content:center;padding:20px;z-index:5}
+    .modal.show{display:flex}.modalbox{background:#fff;border-radius:15px;padding:20px;max-width:520px;width:100%;max-height:80vh;overflow:auto}.modalbox h3{margin:0 0 12px}.close{float:right;border:0;background:#edf2f8;border-radius:8px;padding:5px 10px;cursor:pointer}
+    @media(min-width:620px){main{padding-top:22px}.news-list{grid-template-columns:repeat(2,minmax(0,1fr))}.news-card{min-height:490px}.photo{height:150px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top"><div class="live">நேரடி தமிழ் செய்திகள்</div><div class="date" id="dateLine"></div></div>
+    <div class="brand">
+      <div class="brandrow"><div class="logo">▣</div><div><h1>AI Tamil News</h1><div class="tagline">எளிய தமிழ் நியூஸ் · இலங்கை · இந்தியா · உலகம்</div></div></div>
+      <button class="admin" id="adminBtn">🔐 ஆசிரியர் உள்ள்நுழைவு</button>
+    </div>
+    <div class="breaking"><strong>முக்கியச் செய்திகள்</strong><span>🔴 <span style="color:#a90016">[உலகம்] வெ</span></span></div>
+  </header>
+  <main>
+    <nav class="filters" aria-label="செய்தி வகைகள்">
+      <button class="filter active" data-category="அனைத்தும்">அனைத்தும்</button>
+      <button class="filter" data-category="இலங்கை">இலங்கை</button>
+      <button class="filter" data-category="தமிழகம்">தமிழகம்</button>
+      <button class="filter" data-category="உலகம்">உலகம்</button>
+      <button class="filter" data-category="விளையாட்டு">விளையாட்டு</button>
+      <button class="filter" data-category="சினிமா">சினிமா</button>
+    </nav>
+    <input class="search" id="search" type="search" placeholder="🔎  தமிழில் செய்திகளைத் தேடவும்..." aria-label="செய்திகளைத் தேடவும்">
+    <div class="sectionhead"><h2>சமீபத்திய செய்திகள்</h2><span class="count" id="count">3 செய்திகள்</span></div>
+    <section class="news-list" id="newsList">
+      <article class="news-card" data-category="உலகம்">
+        <div class="photo" aria-hidden="true"></div>
+        <div class="meta"><div class="pills"><span class="pill category">உலகம்</span><span class="pill important">முக்கியச் செய்தி</span></div><time>20 நவம்பர் 2026</time></div>
+        <h3 class="headline">செயற்கை நுண்ணறிவுத் தொழில்நுட்பத்தில் புதிய மைல்கல்: தமிழ்த் தரவுப் பயன்பாடு அதிகரிப்பு</h3>
+        <p class="summary">உலகளவில் செயற்கை நுண்ணறிவு (AI) மாதிரிகள் பிராந்திய மொழிகளில் துல்லியமாகச் செயல்படும் திறனை...</p>
+        <button class="read" data-title="செயற்கை நுண்ணறிவுத் தொழில்நுட்பத்தில் புதிய மைல்கல்: தமிழ்த் தரவுப் பயன்பாடு அதிகரிப்பு" data-summary="உலகளவில் செயற்கை நுண்ணறிவு (AI) மாதிரிகள் பிராந்திய மொழிகளில் துல்லியமாகச் செயல்படும் திறனை மேம்படுத்தும் முயற்சிகள் தொடர்ந்து நடைபெற்று வருகின்றன.">முழுமையாகப் படிக்க</button>
+      </article>
+      <article class="news-card" data-category="இலங்கை">
+        <div class="photo" aria-hidden="true"></div>
+        <div class="meta"><div class="pills"><span class="pill category">இலங்கை</span></div><time>20 நவம்பர் 2026</time></div>
+        <h3 class="headline">இலங்கையில் டிஜிட்டல் உட்கட்டமைப்பு மற்றும் சேவைகள் மேம்பாடு குறித்த ஆலோசனை</h3>
+        <p class="summary">இலங்கையின் பல்வேறு துறைகளிலும் டிஜிட்டல் சேவைகளை எளிமைப்படுத்துவது மற்றும்...</p>
+        <button class="read" data-title="இலங்கையில் டிஜிட்டல் உட்கட்டமைப்பு மற்றும் சேவைகள் மேம்பாடு குறித்த ஆலோசனை" data-summary="இலங்கையின் பல்வேறு துறைகளிலும் டிஜிட்டல் சேவைகளை எளிமைப்படுத்துவது மற்றும் பொதுமக்களுக்கான அணுகலை மேம்படுத்துவது தொடர்பான ஆலோசனைகள் முன்னெடுக்கப்படுகின்றன.">முழுமையாகப் படிக்க</button>
+      </article>
+      <article class="news-card" data-category="தமிழகம்">
+        <div class="photo" aria-hidden="true"></div>
+        <div class="meta"><div class="pills"><span class="pill category">தமிழகம்</span><span class="pill important">முக்கியச் செய்தி</span></div><time>19 நவம்பர் 2026</time></div>
+        <h3 class="headline">தமிழகத்தில் தகவல் தொழில்நுட்பம் மற்றும் புத்தொழில் வளர்ச்சித் திட்டங்கள்</h3>
+        <p class="summary">தமிழகத்தில் இளைஞர்களுக்கான தொழில்நுட்பப் பயிற்சிகள் மற்றும் புதிய ஸ்டார்ட்-அப் நிறுவனங்களுக்கான...</p>
+        <button class="read" data-title="தமிழகத்தில் தகவல் தொழில்நுட்பம் மற்றும் புத்தொழில் வளர்ச்சித் திட்டங்கள்" data-summary="தமிழகத்தில் இளைஞர்களுக்கான தொழில்நுட்பப் பயிற்சிகள் மற்றும் புதிய ஸ்டார்ட்-அப் நிறுவனங்களுக்கான ஆதரவு திட்டங்கள் குறித்து அறிவிப்புகள் வெளியாகியுள்ளன.">முழுமையாகப் படிக்க</button>
+      </article>
+    </section>
+  </main>
+  <footer>© 2026 AI Tamil News (எஜ் தமிழ் நியூஸ்).<br>அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.</footer>
+  <div class="modal" id="modal" role="dialog" aria-modal="true"><div class="modalbox"><button class="close" id="closeModal">மூடு ✕</button><h3 id="modalTitle"></h3><p id="modalText" style="line-height:1.9;color:#4b5871"></p></div></div>
+  <script>
+    const dateEl=document.getElementById('dateLine');
+    const now=new Date();
+    dateEl.textContent=new Intl.DateTimeFormat('ta-LK',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now)+' அன்று '+new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+    const cards=[...document.querySelectorAll('.news-card')], filters=[...document.querySelectorAll('.filter')], search=document.getElementById('search');
+    let selected='அனைத்தும்';
+    function update(){const q=search.value.trim().toLocaleLowerCase();let visible=0;cards.forEach(card=>{const matchCat=selected==='அனைத்தும்'||card.dataset.category===selected;const matchText=card.innerText.toLocaleLowerCase().includes(q);const show=matchCat&&matchText;card.style.display=show?'flex':'none';if(show)visible++;});document.getElementById('count').textContent=visible+' செய்திகள்';let empty=document.getElementById('empty');if(!visible&&!empty){empty=document.createElement('div');empty.id='empty';empty.className='empty';empty.textContent='செய்திகள் எதுவும் கிடைக்கவில்லை.';document.getElementById('newsList').appendChild(empty)}else if(visible&&empty)empty.remove();}
+    filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('active'));btn.classList.add('active');selected=btn.dataset.category;update()}));search.addEventListener('input',update);
+    const modal=document.getElementById('modal');document.querySelectorAll('.read').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('modalTitle').textContent=btn.dataset.title;document.getElementById('modalText').textContent=btn.dataset.summary;modal.classList.add('show')}));
+    document.getElementById('closeModal').addEventListener('click',()=>modal.classList.remove('show'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('show')});
+    document.getElementById('adminBtn').addEventListener('click',()=>alert('ஆசிரியர் உள்நுழைவு வசதி விரைவில் சேர்க்கப்படும்.'));
+  </script>
+</body>
+</html>
