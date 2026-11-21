@@ -37,7 +37,6 @@
       transition: background 0.2s, color 0.2s;
     }
 
-    /* மேல் அறிவிப்புப் பட்டை */
     .top-strip {
       background: #0f172a;
       color: #e2e8f0;
@@ -64,7 +63,6 @@
       padding: 14px;
     }
 
-    /* பிரதான தலைப்பு (Header) */
     .site-header {
       background: var(--card);
       border: 1px solid var(--border);
@@ -120,7 +118,6 @@
       cursor: pointer;
     }
 
-    /* முக்கியச் செய்தி Ticker */
     .breaking-bar {
       background: var(--card);
       border: 1px solid var(--border);
@@ -151,7 +148,6 @@
       text-overflow: ellipsis;
     }
 
-    /* பெரிய முகப்பு Banner */
     .hero-banner {
       position: relative;
       border-radius: 18px;
@@ -203,7 +199,6 @@
       color: #cbd5e1;
     }
 
-    /* வகை பட்டன்கள் (Categories) */
     .cat-list {
       display: flex;
       gap: 8px;
@@ -230,7 +225,6 @@
       border-color: var(--primary);
     }
 
-    /* தேடல் பெட்டி (Search) */
     .search-box {
       width: 100%;
       background: var(--card);
@@ -243,7 +237,6 @@
       outline: none;
     }
 
-    /* சமீபத்திய செய்திகள் தலைப்பு */
     .section-head {
       display: flex;
       justify-content: space-between;
@@ -265,7 +258,6 @@
       font-weight: 700;
     }
 
-    /* செய்தி அட்டைகள் */
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
@@ -289,6 +281,7 @@
       height: 195px;
       background: #0f172a;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .news-thumb img {
@@ -327,22 +320,38 @@
       font-size: 1.06rem;
       font-weight: 700;
       line-height: 1.5;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       color: var(--text);
+      cursor: pointer;
     }
 
-    .news-full-lines {
-      font-size: 0.92rem;
+    .news-preview {
+      font-size: 0.9rem;
       color: var(--muted);
-      line-height: 1.75;
-      white-space: pre-line;
-      text-align: justify;
+      line-height: 1.7;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .read-more-btn {
+      margin-top: 10px;
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.86rem;
+      cursor: pointer;
+      padding: 0;
     }
 
     .news-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
       padding: 12px 16px;
       border-top: 1px solid var(--border);
       background: rgba(148, 163, 184, 0.08);
@@ -350,21 +359,23 @@
 
     .action-group {
       display: flex;
-      gap: 10px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
     .btn {
       border: 1px solid var(--border);
       background: var(--card);
       color: var(--text);
-      padding: 7px 14px;
+      padding: 6px 11px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+      text-decoration: none;
     }
 
     .btn.liked {
@@ -373,11 +384,84 @@
       color: #dc2626;
     }
 
-    .btn-source {
-      background: var(--primary);
+    .btn-wa {
+      background: #16a34a;
       color: #fff;
-      border-color: var(--primary);
-      text-decoration: none;
+      border-color: #16a34a;
+    }
+
+    .btn-fb {
+      background: #1d4ed8;
+      color: #fff;
+      border-color: #1d4ed8;
+    }
+
+    /* முழுச் செய்தி Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .close-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 14px;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .modal-body {
+      font-size: 0.96rem;
+      color: var(--muted);
+      line-height: 1.85;
+      white-space: pre-line;
+      margin-bottom: 16px;
     }
   </style>
 </head>
@@ -388,7 +472,6 @@
   </div>
 
   <div class="container">
-    <!-- Header -->
     <header class="site-header">
       <div class="brand-left">
         <div class="ai-logo">AI</div>
@@ -400,13 +483,11 @@
       <button type="button" class="theme-btn" id="themeBtn">🌙 இரவு</button>
     </header>
 
-    <!-- முக்கியச் செய்தி -->
     <div class="breaking-bar">
       <span class="breaking-tag">முக்கியச் செய்தி</span>
       <div class="breaking-text" id="breakingText">இலங்கையின் பிரதான செய்திகள் மற்றும் இன்றைய முக்கியத் தகவல்கள்</div>
     </div>
 
-    <!-- Hero Banner -->
     <section class="hero-banner">
       <div class="hero-badge-row">
         <div class="hero-ai-circle">AI</div>
@@ -416,7 +497,6 @@
       <div class="hero-cats">இலங்கை · தமிழகம் · உலகம் · விளையாட்டு · சினிமா</div>
     </section>
 
-    <!-- Category Filter -->
     <div class="cat-list" id="catList">
       <button type="button" class="cat-btn active" data-cat="அனைத்தும்">அனைத்தும்</button>
       <button type="button" class="cat-btn" data-cat="இலங்கை">இலங்கை</button>
@@ -426,7 +506,6 @@
       <button type="button" class="cat-btn" data-cat="சினிமா">சினிமா</button>
     </div>
 
-    <!-- Search -->
     <input
       type="text"
       id="searchInput"
@@ -434,23 +513,68 @@
       placeholder="🔍 தமிழில் செய்திகளைத் தேடவும்..."
     />
 
-    <!-- Section Heading -->
     <div class="section-head">
       <h2 class="section-title">சமீபத்திய செய்திகள்</h2>
       <span class="count-pill" id="countPill">0 செய்திகள்</span>
     </div>
 
-    <!-- News Cards -->
     <div class="news-grid" id="newsGrid"></div>
   </div>
 
+  <!-- முழுச் செய்தி Modal -->
+  <div class="modal-backdrop" id="articleModal">
+    <div class="modal-box">
+      <div class="modal-top">
+        <span id="modalCategory" class="count-pill">செய்தி</span>
+        <button type="button" class="close-btn" id="closeModalBtn">✕ மூடு</button>
+      </div>
+      <img id="modalImg" class="modal-img" src="" alt="" />
+      <h2 id="modalTitle" class="modal-title"></h2>
+      <div id="modalMeta" class="news-meta"></div>
+      <div id="modalBody" class="modal-body"></div>
+      <div class="news-footer" id="modalFooter"></div>
+    </div>
+  </div>
+
   <script>
+    const FALLBACK_NEWS = [
+      {
+        id: "fb-1",
+        title: "இலங்கையின் இன்றைய முக்கிய செய்திகள் மற்றும் பொருளாதார நிலவரம்",
+        description: "இலங்கையின் அண்மைய செய்திகள் மற்றும் முக்கிய தகவல்கள் தொடர்ந்து வெளியிடப்பட்டு வருகின்றன.",
+        category: "இலங்கை",
+        source: "AI Tamil News",
+        date: "இன்று",
+        url: "#",
+        likes: 18
+      },
+      {
+        id: "fb-2",
+        title: "தமிழகத்தின் முக்கிய அறிவிப்புகள் மற்றும் வளர்ச்சித் திட்டங்கள்",
+        description: "தமிழகம் முழுவதும் நடைபெற்று வரும் முக்கிய நிகழ்வுகள் மற்றும் அரசு அறிவிப்புகள் குறித்த விவரங்கள்.",
+        category: "தமிழகம்",
+        source: "AI Tamil News",
+        date: "இன்று",
+        url: "#",
+        likes: 21
+      },
+      {
+        id: "fb-3",
+        title: "உலகளாவிய பொருளாதாரம் மற்றும் சர்வதேச முக்கிய நிகழ்வுகள்",
+        description: "உலக நாடுகளில் நிகழும் முக்கிய மாற்றங்கள் மற்றும் செய்திகள் உடனுக்குடன் தொகுக்கப்படுகின்றன.",
+        category: "உலகம்",
+        source: "AI Tamil News",
+        date: "இன்று",
+        url: "#",
+        likes: 15
+      }
+    ];
+
     let allNews = [];
     let selectedCategory = "அனைத்தும்";
     let searchQuery = "";
     const coverCache = {};
 
-    // தேதி & நேரம்
     function updateClock() {
       const now = new Date();
       document.getElementById("liveClock").textContent = now.toLocaleString("ta-IN", {
@@ -465,7 +589,6 @@
     updateClock();
     setInterval(updateClock, 30000);
 
-    // இரவு / பகல் பயன்முறை
     const themeBtn = document.getElementById("themeBtn");
     themeBtn.addEventListener("click", () => {
       document.body.classList.toggle("dark");
@@ -473,7 +596,6 @@
       themeBtn.textContent = isDark ? "☀️ பகல்" : "🌙 இரவு";
     });
 
-    // ஒவ்வொரு செய்திக்கும் முகப்புப் படம் (Canvas Banner)
     function generateNewsCover(title = "", category = "AI NEWS") {
       const cacheKey = `${category}__${title}`;
       if (coverCache[cacheKey]) return coverCache[cacheKey];
@@ -489,16 +611,11 @@
       let accent = "#38bdf8";
       let tagLabel = category || "AI TAMIL NEWS";
 
-      if (text.includes("இலங்கை") || text.includes("sri lanka") || text.includes("கொழும்பு")) {
+      if (text.includes("இலங்கை") || text.includes("sri lanka")) {
         gradStart = "#1e1b4b";
         gradEnd = "#0f766e";
         accent = "#2dd4bf";
         tagLabel = "இலங்கை செய்திகள்";
-      } else if (text.includes("கொள்ளை") || text.includes("சிறை") || text.includes("நீதிமன்றம்") || text.includes("கைது")) {
-        gradStart = "#1f2937";
-        gradEnd = "#991b1b";
-        accent = "#f87171";
-        tagLabel = "முக்கிய நிகழ்வு";
       } else if (text.includes("விளையாட்டு") || text.includes("கிரிக்கெட்")) {
         gradStart = "#052e16";
         gradEnd = "#15803d";
@@ -532,11 +649,9 @@
       const words = (title || "சமீபத்திய செய்தி").split(" ");
       const lines = [];
       let currentLine = "";
-      const maxWidth = 710;
-
       for (let i = 0; i < words.length; i++) {
         const testLine = currentLine ? `${currentLine} ${words[i]}` : words[i];
-        if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+        if (ctx.measureText(testLine).width > 710 && currentLine) {
           lines.push(currentLine);
           currentLine = words[i];
         } else {
@@ -546,9 +661,7 @@
       if (currentLine) lines.push(currentLine);
 
       const visibleLines = lines.slice(0, 4);
-      if (lines.length > 4) {
-        visibleLines[3] = visibleLines[3] + "...";
-      }
+      if (lines.length > 4) visibleLines[3] = visibleLines[3] + "...";
 
       let y = 135;
       visibleLines.forEach((line) => {
@@ -564,11 +677,10 @@
       return dataUrl;
     }
 
-    // செய்தி 10+ வரிகள் வருமாறு விரிவாக்கும் சார்பு
     function ensureLongContent(title, desc) {
       let text = (desc || "").trim();
-      if (text.length < 450) {
-        text = `${text}\n\nஇது தொடர்பாக சம்பந்தப்பட்ட அதிகாரிகள் மற்றும் துறை சார்ந்த வட்டாரங்களில் இருந்து கூடுதல் தகவல்கள் தொடர்ந்து வெளியாகி வருகின்றன. பொதுமக்கள் மற்றும் வாசகர்கள் மத்தியில் இச்செய்தி முக்கிய கவனத்தைப் பெற்றுள்ளது.\n\nமேலும், இதனுடன் தொடர்புடைய அடுத்தகட்ட நடவடிக்கைகள் மற்றும் அதிகாரப்பூர்வ அறிவிப்புகள் குறித்து தொடர்ந்து கண்காணிக்கப்பட்டு வருகிறது. முழுமையான விவரங்கள் வெளியானதும் எமது AI Tamil News தளத்தில் உடனுக்குடன் பதிவேற்றம் செய்யப்படும்.`;
+      if (text.length < 300) {
+        text = `${text}\n\nஇது தொடர்பாக சம்பந்தப்பட்ட அதிகாரிகள் மற்றும் துறை சார்ந்த வட்டாரங்களில் இருந்து கூடுதல் தகவல்கள் தொடர்ந்து வெளியாகி வருகின்றன. பொதுமக்கள் மற்றும் வாசகர்கள் மத்தியில் இச்செய்தி முக்கிய கவனத்தைப் பெற்றுள்ளது.\n\nமுழுமையான விவரங்கள் வெளியானதும் எமது AI Tamil News தளத்தில் உடனுக்குடன் பதிவேற்றம் செய்யப்படும்.`;
       }
       return text;
     }
@@ -585,21 +697,52 @@
       localStorage.setItem("news_likes_v4", JSON.stringify(likes));
     }
 
-    async function shareNews(item) {
-      const shareUrl = item.url && item.url !== "#" ? item.url : window.location.href;
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: item.title,
-            text: item.title,
-            url: shareUrl
-          });
-        } catch {}
-      } else {
-        await navigator.clipboard.writeText(`${item.title} - ${shareUrl}`);
-        alert("செய்தி இணைப்பு நகலெடுக்கப்பட்டது!");
-      }
+    function getShareUrl(item) {
+      return item.url && item.url !== "#" ? item.url : window.location.href;
     }
+
+    function shareWhatsApp(item) {
+      const msg = encodeURIComponent(`${item.title}\n\n${getShareUrl(item)}`);
+      window.open(`https://wa.me/?text=${msg}`, "_blank", "noopener");
+    }
+
+    function shareFacebook(item) {
+      const url = encodeURIComponent(getShareUrl(item));
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank", "noopener");
+    }
+
+    function openArticleModal(item, coverSrc, longText) {
+      document.getElementById("modalCategory").textContent = item.category || "செய்திகள்";
+      document.getElementById("modalImg").src = coverSrc;
+      document.getElementById("modalTitle").textContent = item.title;
+      document.getElementById("modalMeta").innerHTML = `
+        <span>${item.source || "AI Tamil News"}</span>
+        <span>${item.date || ""}</span>
+      `;
+      document.getElementById("modalBody").textContent = longText;
+
+      const footer = document.getElementById("modalFooter");
+      footer.innerHTML = `
+        <div class="action-group">
+          <button type="button" class="btn btn-wa" id="mWaBtn">WhatsApp</button>
+          <button type="button" class="btn btn-fb" id="mFbBtn">Facebook</button>
+        </div>
+        <a class="btn" href="${item.url || "#"}" target="_blank" rel="noopener">மூலச் செய்தி</a>
+      `;
+      footer.querySelector("#mWaBtn").onclick = () => shareWhatsApp(item);
+      footer.querySelector("#mFbBtn").onclick = () => shareFacebook(item);
+
+      document.getElementById("articleModal").classList.add("open");
+    }
+
+    document.getElementById("closeModalBtn").onclick = () => {
+      document.getElementById("articleModal").classList.remove("open");
+    };
+    document.getElementById("articleModal").onclick = (e) => {
+      if (e.target.id === "articleModal") {
+        e.currentTarget.classList.remove("open");
+      }
+    };
 
     function renderFilteredNews() {
       const grid = document.getElementById("newsGrid");
@@ -645,7 +788,8 @@
                 <span>${item.date || ""}</span>
               </div>
               <h3 class="news-title">${item.title}</h3>
-              <div class="news-full-lines">${longText}</div>
+              <div class="news-preview">${longText}</div>
+              <button type="button" class="read-more-btn">முழுச் செய்தி படிக்க →</button>
             </div>
           </div>
 
@@ -653,16 +797,12 @@
             <div class="action-group">
               <button type="button" class="btn like-btn ${isLiked ? "liked" : ""}">
                 <span>${isLiked ? "❤️" : "🤍"}</span>
-                <span>Like (${likeCount})</span>
+                <span>${likeCount}</span>
               </button>
-              <button type="button" class="btn share-btn">
-                <span>🔗</span>
-                <span>Share</span>
-              </button>
+              <button type="button" class="btn btn-wa wa-btn">WA</button>
+              <button type="button" class="btn btn-fb fb-btn">FB</button>
             </div>
-            <a class="btn btn-source" href="${item.url || "#"}" target="_blank" rel="noopener">
-              மூலச் செய்தி
-            </a>
+            <a class="btn" href="${item.url || "#"}" target="_blank" rel="noopener">மூலம்</a>
           </div>
         `;
 
@@ -674,13 +814,18 @@
           renderFilteredNews();
         };
 
-        card.querySelector(".share-btn").onclick = () => shareNews(item);
+        card.querySelector(".wa-btn").onclick = () => shareWhatsApp(item);
+        card.querySelector(".fb-btn").onclick = () => shareFacebook(item);
+
+        const openModal = () => openArticleModal(item, coverSrc, longText);
+        card.querySelector(".news-thumb").onclick = openModal;
+        card.querySelector(".news-title").onclick = openModal;
+        card.querySelector(".read-more-btn").onclick = openModal;
 
         grid.appendChild(card);
       });
     }
 
-    // Category click
     document.querySelectorAll(".cat-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".cat-btn").forEach((b) => b.classList.remove("active"));
@@ -690,20 +835,20 @@
       });
     });
 
-    // Search input
     document.getElementById("searchInput").addEventListener("input", (e) => {
       searchQuery = e.target.value;
       renderFilteredNews();
     });
 
-    // Load news.json
     async function init() {
       try {
         const res = await fetch("news.json?v=" + Date.now());
-        allNews = await res.json();
+        if (!res.ok) throw new Error("Network response was not ok");
+        const data = await res.json();
+        allNews = Array.isArray(data) && data.length > 0 ? data : FALLBACK_NEWS;
       } catch (e) {
         console.error("news.json load error:", e);
-        allNews = [];
+        allNews = FALLBACK_NEWS;
       }
       renderFilteredNews();
     }
