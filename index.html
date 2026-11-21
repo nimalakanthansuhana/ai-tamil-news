@@ -28,7 +28,7 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
     }
 
@@ -52,8 +52,9 @@
     .news-thumb {
       position: relative;
       width: 100%;
-      height: 200px;
-      background: #cbd5e1;
+      height: 195px;
+      background: #0f172a;
+      overflow: hidden;
     }
 
     .news-thumb img {
@@ -73,6 +74,7 @@
       border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
     .news-content {
@@ -88,14 +90,13 @@
     }
 
     .news-title {
-      font-size: 1.08rem;
+      font-size: 1.06rem;
       font-weight: 700;
       line-height: 1.5;
       margin-bottom: 12px;
       color: var(--text);
     }
 
-    /* 10+ வரிகள் முழுமையாகத் தெரியும் வகையில் அமைக்கப்பட்டுள்ளது */
     .news-full-lines {
       font-size: 0.92rem;
       color: var(--muted);
@@ -152,43 +153,129 @@
   </div>
 
   <script>
-    // செய்தியின் தலைப்புக்கு ஏற்ப படம் தரும் function
-    function getTopicImage(title = "", desc = "", category = "") {
-      const text = `${title} ${desc} ${category}`.toLowerCase();
-      if (text.includes("இலங்கை") || text.includes("sri lanka") || text.includes("கொழும்பு") || text.includes("தமிழர்")) {
-        return "https://images.unsplash.com/photo-1588591795084-17770cb32374?auto=format&fit=crop&w=800&q=80";
+    // ஒவ்வொரு செய்திக்கும் தனித்துவமான முகப்புப் படம் (Canvas Banner) உருவாக்கும் சார்பு
+    const coverCache = {};
+
+    function generateNewsCover(title = "", category = "AI NEWS") {
+      const cacheKey = `${category}__${title}`;
+      if (coverCache[cacheKey]) return coverCache[cacheKey];
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 800;
+      canvas.height = 420;
+      const ctx = canvas.getContext("2d");
+
+      const text = `${title} ${category}`.toLowerCase();
+
+      // செய்தி வகை / தலைப்புக்கு ஏற்ப வண்ணக் கலவை (Theme Colors)
+      let gradStart = "#0f172a";
+      let gradEnd = "#1d4ed8";
+      let accent = "#38bdf8";
+      let tagLabel = category || "AI TAMIL NEWS";
+
+      if (text.includes("இலங்கை") || text.includes("sri lanka") || text.includes("கொழும்பு")) {
+        gradStart = "#1e1b4b";
+        gradEnd = "#0f766e";
+        accent = "#2dd4bf";
+        tagLabel = "இலங்கை செய்திகள்";
+      } else if (text.includes("கொள்ளை") || text.includes("சிறை") || text.includes("நீதிமன்றம்") || text.includes("கைது")) {
+        gradStart = "#1f2937";
+        gradEnd = "#991b1b";
+        accent = "#f87171";
+        tagLabel = "முக்கிய நிகழ்வு";
+      } else if (text.includes("விளையாட்டு") || text.includes("கிரிக்கெட்")) {
+        gradStart = "#052e16";
+        gradEnd = "#15803d";
+        accent = "#4ade80";
+        tagLabel = "விளையாட்டு";
+      } else if (text.includes("சினிமா") || text.includes("படம்")) {
+        gradStart = "#3b0764";
+        gradEnd = "#be185d";
+        accent = "#f472b6";
+        tagLabel = "சினிமா";
       }
-      if (text.includes("கொள்ளை") || text.includes("சிறை") || text.includes("நீதிமன்றம்") || text.includes("கைது")) {
-        return "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80";
+
+      // பின்னணி Gradient
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, gradStart);
+      grad.addColorStop(1, gradEnd);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // அலங்கார வட்டங்கள் (AI / Modern design)
+      ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.beginPath();
+      ctx.arc(680, 90, 140, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(110, 360, 110, 0, Math.PI * 2);
+      ctx.fill();
+
+      // மேல் AI Badge
+      ctx.fillStyle = accent;
+      ctx.font = "bold 22px sans-serif";
+      ctx.fillText(`AI TAMIL NEWS  •  ${tagLabel}`, 42, 68);
+
+      // செய்தித் தலைப்பை பல வரிகளாகப் பிரித்து எழுதுதல்
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 34px 'Noto Sans Tamil', sans-serif";
+
+      const words = (title || "சமீபத்திய செய்தி").split(" ");
+      const lines = [];
+      let currentLine = "";
+      const maxWidth = 710;
+
+      for (let i = 0; i < words.length; i++) {
+        const testLine = currentLine ? `${currentLine} ${words[i]}` : words[i];
+        if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+          lines.push(currentLine);
+          currentLine = words[i];
+        } else {
+          currentLine = testLine;
+        }
       }
-      if (text.includes("விளையாட்டு") || text.includes("கிரிக்கெட்") || text.includes("cricket")) {
-        return "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=800&q=80";
+      if (currentLine) lines.push(currentLine);
+
+      const visibleLines = lines.slice(0, 4);
+      if (lines.length > 4) {
+        visibleLines[3] = visibleLines[3] + "...";
       }
-      if (text.includes("சினிமா") || text.includes("படம்") || text.includes("நடிகர்")) {
-        return "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80";
-      }
-      return "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80";
+
+      let y = 135;
+      visibleLines.forEach((line) => {
+        ctx.fillText(line, 42, y);
+        y += 48;
+      });
+
+      // கீழ் Border Line
+      ctx.fillStyle = accent;
+      ctx.fillRect(42, 365, 160, 6);
+
+      const dataUrl = canvas.toDataURL("image/png");
+      coverCache[cacheKey] = dataUrl;
+      return dataUrl;
     }
 
     // செய்தி 10 வரிகளுக்குக் குறைவாக இருந்தால் தானாகவே கூடுதல் வரிகளைச் சேர்க்கும்
-    function ensureLongContent(title, desc, category) {
+    function ensureLongContent(title, desc) {
       let text = (desc || "").trim();
       if (text.length < 450) {
-        text = `${text}\n\nஇது தொடர்பாக சம்பந்தப்பட்ட அதிகாரிகள் மற்றும் துறை சார்ந்த வட்டாரங்களில் இருந்து கூடுதல் தகவல்கள் தொடர்ந்து வெளியாகி வருகின்றன. பொதுமக்கள் மத்தியில் இச்செய்தி முக்கிய கவனத்தைப் பெற்றுள்ளது.\n\nமேலும், இதனுடன் தொடர்புடைய அடுத்தகட்ட நடவடிக்கைகள் மற்றும் அதிகாரப்பூர்வ அறிவிப்புகள் குறித்து தொடர்ந்து கண்காணிக்கப்பட்டு வருகிறது. முழுமையான விவரங்கள் வெளியானதும் எமது AI Tamil News தளத்தில் உடனுக்குடன் பதிவேற்றம் செய்யப்படும்.`;
+        text = `${text}\n\nஇது தொடர்பாக சம்பந்தப்பட்ட அதிகாரிகள் மற்றும் துறை சார்ந்த வட்டாரங்களில் இருந்து கூடுதல் தகவல்கள் தொடர்ந்து வெளியாகி வருகின்றன. பொதுமக்கள் மற்றும் வாசகர்கள் மத்தியில் இச்செய்தி முக்கிய கவனத்தைப் பெற்றுள்ளது.\n\nமேலும், இதனுடன் தொடர்புடைய அடுத்தகட்ட நடவடிக்கைகள் மற்றும் அதிகாரப்பூர்வ அறிவிப்புகள் குறித்து தொடர்ந்து கண்காணிக்கப்பட்டு வருகிறது. முழுமையான விவரங்கள் வெளியானதும் எமது AI Tamil News தளத்தில் உடனுக்குடன் பதிவேற்றம் செய்யப்படும்.`;
       }
       return text;
     }
 
     function getLikes() {
       try {
-        return JSON.parse(localStorage.getItem("news_likes_v2") || "{}");
+        return JSON.parse(localStorage.getItem("news_likes_v3") || "{}");
       } catch {
         return {};
       }
     }
 
     function saveLikes(likes) {
-      localStorage.setItem("news_likes_v2", JSON.stringify(likes));
+      localStorage.setItem("news_likes_v3", JSON.stringify(likes));
     }
 
     async function shareNews(item) {
@@ -225,17 +312,17 @@
         const id = item.id || `item-${index}`;
         const isLiked = !!likesMap[id];
         const likeCount = (Number(item.likes) || 12) + (isLiked ? 1 : 0);
-        const imgSrc = item.image && item.image.startsWith("http")
-          ? item.image
-          : getTopicImage(item.title, item.description, item.category);
-        const longText = ensureLongContent(item.title, item.description, item.category);
+
+        // எப்போதும் முகப்புப் படம் தெரியும்படி Canvas Cover Image பயன்படுத்தப்படுகிறது
+        const coverSrc = generateNewsCover(item.title, item.category);
+        const longText = ensureLongContent(item.title, item.description);
 
         const card = document.createElement("article");
         card.className = "news-card";
         card.innerHTML = `
           <div>
             <div class="news-thumb">
-              <img src="${imgSrc}" alt="${item.title}" loading="lazy" />
+              <img src="${coverSrc}" alt="${item.title}" />
               <span class="badge">${item.category || "செய்திகள்"}</span>
             </div>
             <div class="news-content">
@@ -264,11 +351,6 @@
             </a>
           </div>
         `;
-
-        const img = card.querySelector("img");
-        img.onerror = () => {
-          img.src = getTopicImage(item.title, item.description, item.category);
-        };
 
         card.querySelector(".like-btn").onclick = () => {
           const map = getLikes();
