@@ -103,7 +103,7 @@ def update_news():
                     "description": full_text,
                     "category": category,
                     "source": source,
-                    "date": datetime.now().strftime("%d-%m-%Y %I:%M %p"),
+                    ""date": pub_date,
                     "image": image_url,
                     "url": link,
                     "likes": 15
