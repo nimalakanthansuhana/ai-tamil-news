@@ -6,32 +6,266 @@
   <title>AI Tamil News</title>
   <style>
     :root {
-      --bg: #f1f5f9;
+      --bg: #f3f5fa;
       --card: #ffffff;
       --text: #0f172a;
       --muted: #334155;
       --primary: #2563eb;
+      --accent: #e11d48;
       --border: #e2e8f0;
+    }
+
+    body.dark {
+      --bg: #0b1120;
+      --card: #111827;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --primary: #3b82f6;
+      --border: #1e293b;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: "Noto Sans Tamil", system-ui, sans-serif;
+      font-family: "Noto Sans Tamil", system-ui, -apple-system, sans-serif;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      padding: 14px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* மேல் அறிவிப்புப் பட்டை */
+    .top-strip {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 8px 14px;
+      font-size: 0.78rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .live-pill {
+      background: #881337;
+      color: #fecdd3;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 700;
     }
 
     .container {
       max-width: 1120px;
       margin: 0 auto;
+      padding: 14px;
     }
 
+    /* பிரதான தலைப்பு (Header) */
+    .site-header {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ai-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .theme-btn {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* முக்கியச் செய்தி Ticker */
+    .breaking-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .breaking-tag {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .breaking-text {
+      font-size: 0.88rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* பெரிய முகப்பு Banner */
+    .hero-banner {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: linear-gradient(120deg, #090d26, #1e1b4b, #312e81);
+      color: #ffffff;
+      padding: 28px 22px;
+      margin-bottom: 16px;
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+    }
+
+    .hero-badge-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-ai-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.2);
+      border: 2px solid #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #7dd3fc;
+    }
+
+    .hero-main-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-tagline {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fde047;
+      margin-top: 6px;
+    }
+
+    .hero-cats {
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+    }
+
+    /* வகை பட்டன்கள் (Categories) */
+    .cat-list {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+
+    .cat-btn {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cat-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* தேடல் பெட்டி (Search) */
+    .search-box {
+      width: 100%;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      margin-bottom: 18px;
+      outline: none;
+    }
+
+    /* சமீபத்திய செய்திகள் தலைப்பு */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .count-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    /* செய்தி அட்டைகள் */
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
@@ -111,7 +345,7 @@
       justify-content: space-between;
       padding: 12px 16px;
       border-top: 1px solid var(--border);
-      background: #f8fafc;
+      background: rgba(148, 163, 184, 0.08);
     }
 
     .action-group {
@@ -121,7 +355,7 @@
 
     .btn {
       border: 1px solid var(--border);
-      background: #ffffff;
+      background: var(--card);
       color: var(--text);
       padding: 7px 14px;
       border-radius: 8px;
@@ -148,14 +382,98 @@
   </style>
 </head>
 <body>
+  <div class="top-strip">
+    <span class="live-pill">● நேரடி தமிழ் செய்திகள்</span>
+    <span id="liveClock"></span>
+  </div>
+
   <div class="container">
+    <!-- Header -->
+    <header class="site-header">
+      <div class="brand-left">
+        <div class="ai-logo">AI</div>
+        <div>
+          <div class="brand-title">AI Tamil News</div>
+          <div class="brand-sub">நம்பகமான தமிழ் செய்திகள் · இலங்கை · தமிழகம் · உலகம்</div>
+        </div>
+      </div>
+      <button type="button" class="theme-btn" id="themeBtn">🌙 இரவு</button>
+    </header>
+
+    <!-- முக்கியச் செய்தி -->
+    <div class="breaking-bar">
+      <span class="breaking-tag">முக்கியச் செய்தி</span>
+      <div class="breaking-text" id="breakingText">இலங்கையின் பிரதான செய்திகள் மற்றும் இன்றைய முக்கியத் தகவல்கள்</div>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+      <div class="hero-badge-row">
+        <div class="hero-ai-circle">AI</div>
+        <div class="hero-main-title">AI TAMIL NEWS</div>
+      </div>
+      <div class="hero-tagline">நம்பகமான தமிழ் செய்திகள்</div>
+      <div class="hero-cats">இலங்கை · தமிழகம் · உலகம் · விளையாட்டு · சினிமா</div>
+    </section>
+
+    <!-- Category Filter -->
+    <div class="cat-list" id="catList">
+      <button type="button" class="cat-btn active" data-cat="அனைத்தும்">அனைத்தும்</button>
+      <button type="button" class="cat-btn" data-cat="இலங்கை">இலங்கை</button>
+      <button type="button" class="cat-btn" data-cat="தமிழகம்">தமிழகம்</button>
+      <button type="button" class="cat-btn" data-cat="உலகம்">உலகம்</button>
+      <button type="button" class="cat-btn" data-cat="விளையாட்டு">விளையாட்டு</button>
+      <button type="button" class="cat-btn" data-cat="சினிமா">சினிமா</button>
+    </div>
+
+    <!-- Search -->
+    <input
+      type="text"
+      id="searchInput"
+      class="search-box"
+      placeholder="🔍 தமிழில் செய்திகளைத் தேடவும்..."
+    />
+
+    <!-- Section Heading -->
+    <div class="section-head">
+      <h2 class="section-title">சமீபத்திய செய்திகள்</h2>
+      <span class="count-pill" id="countPill">0 செய்திகள்</span>
+    </div>
+
+    <!-- News Cards -->
     <div class="news-grid" id="newsGrid"></div>
   </div>
 
   <script>
-    // ஒவ்வொரு செய்திக்கும் தனித்துவமான முகப்புப் படம் (Canvas Banner) உருவாக்கும் சார்பு
+    let allNews = [];
+    let selectedCategory = "அனைத்தும்";
+    let searchQuery = "";
     const coverCache = {};
 
+    // தேதி & நேரம்
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("liveClock").textContent = now.toLocaleString("ta-IN", {
+        weekday: "short",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // இரவு / பகல் பயன்முறை
+    const themeBtn = document.getElementById("themeBtn");
+    themeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      themeBtn.textContent = isDark ? "☀️ பகல்" : "🌙 இரவு";
+    });
+
+    // ஒவ்வொரு செய்திக்கும் முகப்புப் படம் (Canvas Banner)
     function generateNewsCover(title = "", category = "AI NEWS") {
       const cacheKey = `${category}__${title}`;
       if (coverCache[cacheKey]) return coverCache[cacheKey];
@@ -166,8 +484,6 @@
       const ctx = canvas.getContext("2d");
 
       const text = `${title} ${category}`.toLowerCase();
-
-      // செய்தி வகை / தலைப்புக்கு ஏற்ப வண்ணக் கலவை (Theme Colors)
       let gradStart = "#0f172a";
       let gradEnd = "#1d4ed8";
       let accent = "#38bdf8";
@@ -195,29 +511,21 @@
         tagLabel = "சினிமா";
       }
 
-      // பின்னணி Gradient
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       grad.addColorStop(0, gradStart);
       grad.addColorStop(1, gradEnd);
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // அலங்கார வட்டங்கள் (AI / Modern design)
       ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
       ctx.beginPath();
       ctx.arc(680, 90, 140, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.beginPath();
-      ctx.arc(110, 360, 110, 0, Math.PI * 2);
-      ctx.fill();
-
-      // மேல் AI Badge
       ctx.fillStyle = accent;
       ctx.font = "bold 22px sans-serif";
       ctx.fillText(`AI TAMIL NEWS  •  ${tagLabel}`, 42, 68);
 
-      // செய்தித் தலைப்பை பல வரிகளாகப் பிரித்து எழுதுதல்
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 34px 'Noto Sans Tamil', sans-serif";
 
@@ -248,7 +556,6 @@
         y += 48;
       });
 
-      // கீழ் Border Line
       ctx.fillStyle = accent;
       ctx.fillRect(42, 365, 160, 6);
 
@@ -257,7 +564,7 @@
       return dataUrl;
     }
 
-    // செய்தி 10 வரிகளுக்குக் குறைவாக இருந்தால் தானாகவே கூடுதல் வரிகளைச் சேர்க்கும்
+    // செய்தி 10+ வரிகள் வருமாறு விரிவாக்கும் சார்பு
     function ensureLongContent(title, desc) {
       let text = (desc || "").trim();
       if (text.length < 450) {
@@ -268,14 +575,14 @@
 
     function getLikes() {
       try {
-        return JSON.parse(localStorage.getItem("news_likes_v3") || "{}");
+        return JSON.parse(localStorage.getItem("news_likes_v4") || "{}");
       } catch {
         return {};
       }
     }
 
     function saveLikes(likes) {
-      localStorage.setItem("news_likes_v3", JSON.stringify(likes));
+      localStorage.setItem("news_likes_v4", JSON.stringify(likes));
     }
 
     async function shareNews(item) {
@@ -294,26 +601,33 @@
       }
     }
 
-    async function loadNews() {
+    function renderFilteredNews() {
       const grid = document.getElementById("newsGrid");
-      let newsList = [];
+      const countPill = document.getElementById("countPill");
+      const likesMap = getLikes();
 
-      try {
-        const res = await fetch("news.json?v=" + Date.now());
-        newsList = await res.json();
-      } catch (e) {
-        console.error("news.json load error:", e);
+      const filtered = allNews.filter((item) => {
+        const matchCat =
+          selectedCategory === "அனைத்தும்" ||
+          (item.category && item.category.includes(selectedCategory));
+        const q = searchQuery.trim().toLowerCase();
+        const matchSearch =
+          !q ||
+          (item.title && item.title.toLowerCase().includes(q)) ||
+          (item.description && item.description.toLowerCase().includes(q));
+        return matchCat && matchSearch;
+      });
+
+      countPill.textContent = `${filtered.length} செய்திகள்`;
+      if (filtered.length > 0) {
+        document.getElementById("breakingText").textContent = filtered[0].title;
       }
 
-      const likesMap = getLikes();
       grid.innerHTML = "";
-
-      newsList.forEach((item, index) => {
+      filtered.forEach((item, index) => {
         const id = item.id || `item-${index}`;
         const isLiked = !!likesMap[id];
         const likeCount = (Number(item.likes) || 12) + (isLiked ? 1 : 0);
-
-        // எப்போதும் முகப்புப் படம் தெரியும்படி Canvas Cover Image பயன்படுத்தப்படுகிறது
         const coverSrc = generateNewsCover(item.title, item.category);
         const longText = ensureLongContent(item.title, item.description);
 
@@ -357,7 +671,7 @@
           if (map[id]) delete map[id];
           else map[id] = true;
           saveLikes(map);
-          loadNews();
+          renderFilteredNews();
         };
 
         card.querySelector(".share-btn").onclick = () => shareNews(item);
@@ -366,7 +680,35 @@
       });
     }
 
-    loadNews();
+    // Category click
+    document.querySelectorAll(".cat-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".cat-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedCategory = btn.dataset.cat;
+        renderFilteredNews();
+      });
+    });
+
+    // Search input
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderFilteredNews();
+    });
+
+    // Load news.json
+    async function init() {
+      try {
+        const res = await fetch("news.json?v=" + Date.now());
+        allNews = await res.json();
+      } catch (e) {
+        console.error("news.json load error:", e);
+        allNews = [];
+      }
+      renderFilteredNews();
+    }
+
+    init();
   </script>
 </body>
 </html>
