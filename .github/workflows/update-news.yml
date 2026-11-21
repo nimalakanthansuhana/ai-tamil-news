@@ -3,7 +3,7 @@ name: Update Tamil news feed
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 * * * *"
+    - cron: "17,37 * * * *"
 
 permissions:
   contents: write
