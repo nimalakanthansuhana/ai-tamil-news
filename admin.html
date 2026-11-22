@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Tamil News - செய்தி பதிவிடும் பக்கம்</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: #f1f5f9; margin: 0; padding: 16px; color: #0f172a; }
+    .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+    h1 { font-size: 20px; margin: 0 0 16px; color: #1d4ed8; text-align: center; }
+    label { display: block; font-size: 14px; font-weight: 600; margin: 12px 0 6px; }
+    input, select, textarea {
+      width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px;
+      font-size: 15px; outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: #2563eb; }
+    textarea { min-height: 120px; resize: vertical; }
+    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+    .checkbox-row input { width: 18px; height: 18px; }
+    button {
+      width: 100%; margin-top: 20px; padding: 14px; background: #2563eb; color: #fff;
+      border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
+    }
+    button:disabled { background: #94a3b8; cursor: not-allowed; }
+    .settings-box {
+      background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; margin-bottom: 16px;
+    }
+    .settings-title { font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px; }
+    .status { margin-top: 14px; padding: 12px; border-radius: 10px; font-size: 14px; display: none; }
+    .success { background: #dcfce7; color: #166534; display: block; }
+    .error { background: #fee2e2; color: #991b1b; display: block; }
+    .news-list { margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 16px; }
+    .news-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 8px; gap: 10px;
+    }
+    .news-item-title { font-size: 14px; font-weight: 600; }
+    .news-item-cat { font-size: 12px; color: #2563eb; }
+    .del-btn {
+      width: auto; margin: 0; padding: 6px 12px; background: #ef4444; font-size: 12px; border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📰 AI Tamil News - செய்தி பதிவேற்றம்</h1>
+
+    <!-- GitHub இணைப்பு விவரங்கள் -->
+    <div class="settings-box">
+      <div class="settings-title">⚙️ GitHub இணைப்பு (ஒருமுறை சேமித்தால் போதும்)</div>
+      <label>GitHub Token (PAT)</label>
+      <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
+      <label>Repository (உதாரணம்: nimalakanthansuhana/ai-tamil-news)</label>
+      <input type="text" id="ghRepo" value="nimalakanthansuhana/ai-tamil-news" />
+      <label>கோப்புப் பெயர் (File Path)</label>
+      <input type="text" id="ghPath" value="news.json" />
+    </div>
+
+    <!-- செய்தி உள்ளீட்டுப் படிவம் -->
+    <label>பிரிவு (Category)</label>
+    <select id="category">
+      <option value="இலங்கை">இலங்கை</option>
+      <option value="தமிழகம்">தமிழகம்</option>
+      <option value="உலகம்">உலகம்</option>
+      <option value="விளையாட்டு">விளையாட்டு</option>
+      <option value="சினிமா">சினிமா</option>
+    </select>
+
+    <label>செய்தித் தலைப்பு (Title)</label>
+    <input type="text" id="title" placeholder="செய்தித் தலைப்பை இங்கே டைப் செய்யவும்..." />
+
+    <label>முழுச் செய்தி / விவரம் (Description)</label>
+    <textarea id="description" placeholder="செய்தியின் முழு விவரத்தை இங்கே எழுதவும்..."></textarea>
+
+    <label>படம் இணைப்பு (Image URL - விருப்பப்பட்டால்)</label>
+    <input type="url" id="image" placeholder="https://example.com/photo.jpg" />
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="breaking" />
+      <label for="breaking" style="margin:0;">முக்கியச் செய்தியாகக் காட்டு (Breaking News)</label>
+    </div>
+
+    <button id="publishBtn" onclick="publishNews()">செய்தியை வெளியிடு (Publish)</button>
+    <div id="statusBox" class="status"></div>
+
+    <!-- ஏற்கனவே உள்ள செய்திகளை நீக்கும் பகுதி -->
+    <div class="news-list">
+      <div class="settings-title">📋 வெளியிடப்பட்ட செய்திகள் (நீக்க வேண்டுமென்றால் Delete அழுத்தவும்)</div>
+      <div id="existingNews">ஏற்றப்படுகிறது...</div>
+    </div>
+  </div>
+
+  <script>
+    const tokenInput = document.getElementById('ghToken');
+    const repoInput = document.getElementById('ghRepo');
+    const pathInput = document.getElementById('ghPath');
+    const statusBox = document.getElementById('statusBox');
+
+    // சேமித்த விவரங்களை ஏற்றுதல்
+    tokenInput.value = localStorage.getItem('aitn_token') || '';
+    repoInput.value = localStorage.getItem('aitn_repo') || 'nimalakanthansuhana/ai-tamil-news';
+    pathInput.value = localStorage.getItem('aitn_path') || 'news.json';
+
+    function showStatus(msg, isError = false) {
+      statusBox.textContent = msg;
+      statusBox.className = 'status ' + (isError ? 'error' : 'success');
+    }
+
+    // UTF-8 Base64 மாற்றிகள் (தமிழ் எழுத்துகள் சிதையாமல் இருக்க)
+    function toBase64(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+    function fromBase64(b64) {
+      return decodeURIComponent(escape(atob(b64)));
+    }
+
+    async function fetchNewsFile() {
+      const token = tokenInput.value.trim();
+      const repo = repoInput.value.trim();
+      const path = pathInput.value.trim();
+
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+        headers: token ? { Authorization: `token ${token}` } : {}
+      });
+
+      if (res.status === 404) {
+        return { sha: null, articles: [] };
+      }
+      if (!res.ok) {
+        throw new Error('GitHub கோப்பைப் பெற முடியவில்லை. Token & Repo பெயரைச் சரிபார்க்கவும்.');
+      }
+
+      const data = await res.json();
+      const decoded = JSON.parse(fromBase64(data.content.replace(/\n/g, '')));
+      const articles = Array.isArray(decoded) ? decoded : (decoded.articles || []);
+      return { sha: data.sha, articles, isObjectFormat: !Array.isArray(decoded) };
+    }
+
+    async function saveNewsFile(articles, sha, isObjectFormat, commitMsg) {
+      const token = tokenInput.value.trim();
+      const repo = repoInput.value.trim();
+      const path = pathInput.value.trim();
+
+      const payloadData = isObjectFormat
+        ? { last_updated: new Date().toISOString(), articles }
+        : articles;
+
+      const body = {
+        message: commitMsg,
+        content: toBase64(JSON.stringify(payloadData, null, 2))
+      };
+      if (sha) body.sha = sha;
+
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || 'சேமிப்பதில் பிழை ஏற்பட்டது.');
+      }
+    }
+
+    async function publishNews() {
+      const token = tokenInput.value.trim();
+      const repo = repoInput.value.trim();
+      const path = pathInput.value.trim();
+      const category = document.getElementById('category').value;
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const image = document.getElementById('image').value.trim();
+      const breaking = document.getElementById('breaking').checked;
+
+      if (!token) return showStatus('தயவுசெய்து GitHub Token உள்ளிடவும்.', true);
+      if (!title) return showStatus('செய்தித் தலைப்பை உள்ளிடவும்.', true);
+
+      localStorage.setItem('aitn_token', token);
+      localStorage.setItem('aitn_repo', repo);
+      localStorage.setItem('aitn_path', path);
+
+      const btn = document.getElementById('publishBtn');
+      btn.disabled = true;
+      btn.textContent = 'வெளியிடப்படுகிறது...';
+
+      try {
+        const { sha, articles, isObjectFormat } = await fetchNewsFile();
+
+        const newArticle = {
+          id: Date.now().toString(),
+          title: title,
+          description: description || title,
+          category: category,
+          image: image || '',
+          breaking: breaking,
+          source: 'AI Tamil News',
+          publishedAt: new Date().toISOString()
+        };
+
+        articles.unshift(newArticle); // புதிய செய்தியை முதலில் சேர்க்கும்
+
+        await saveNewsFile(articles, sha, isObjectFormat, `Add news: ${title.slice(0, 30)}`);
+
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('image').value = '';
+        document.getElementById('breaking').checked = false;
+
+        showStatus('✅ செய்தி வெற்றிகரமாக வெளியிடப்பட்டது! 30 வினாடிகளில் தளத்தில் தெரியும்.');
+        renderNewsList(articles);
+      } catch (e) {
+        showStatus('❌ ' + e.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'செய்தியை வெளியிடு (Publish)';
+      }
+    }
+
+    async function deleteNews(index) {
+      if (!confirm('இந்தச் செய்தியை நீக்க வேண்டுமா?')) return;
+      try {
+        const { sha, articles, isObjectFormat } = await fetchNewsFile();
+        articles.splice(index, 1);
+        await saveNewsFile(articles, sha, isObjectFormat, 'Delete news item');
+        showStatus('🗑️ செய்தி நீக்கப்பட்டது.');
+        renderNewsList(articles);
+      } catch (e) {
+        showStatus('❌ ' + e.message, true);
+      }
+    }
+
+    function renderNewsList(articles) {
+      const box = document.getElementById('existingNews');
+      if (!articles.length) {
+        box.innerHTML = '<div style="font-size:13px;color:#64748b;">செய்திகள் எதுவும் இல்லை.</div>';
+        return;
+      }
+      box.innerHTML = articles.slice(0, 20).map((item, idx) => `
+        <div class="news-item">
+          <div>
+            <div class="news-item-cat">${item.category || ''}</div>
+            <div class="news-item-title">${item.title}</div>
+          </div>
+          <button class="del-btn" onclick="deleteNews(${idx})">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    // பக்கம் திறக்கும்போது செய்திகளை ஏற்றுதல்
+    fetchNewsFile()
+      .then(data => renderNewsList(data.articles))
+      .catch(() => {
+        document.getElementById('existingNews').innerHTML =
+          '<div style="font-size:13px;color:#64748b;">Token உள்ளிட்டதும் செய்திகள் இங்கே தெரியும்.</div>';
+      });
+  </script>
+</body>
+</html>
