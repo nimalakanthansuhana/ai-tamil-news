@@ -71,8 +71,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 12px;
+      flex-wrap: wrap;
     }
 
     .brand-left {
@@ -105,6 +106,22 @@
       font-size: 0.78rem;
       color: var(--muted);
       margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-link-btn {
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.82rem;
     }
 
     .theme-btn {
@@ -314,6 +331,7 @@
       font-size: 0.78rem;
       color: #64748b;
       margin-bottom: 8px;
+      gap: 8px;
     }
 
     .news-title {
@@ -396,7 +414,6 @@
       border-color: #1d4ed8;
     }
 
-    /* முழுச் செய்தி Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -480,7 +497,10 @@
           <div class="brand-sub">நம்பகமான தமிழ் செய்திகள் · இலங்கை · தமிழகம் · உலகம்</div>
         </div>
       </div>
-      <button type="button" class="theme-btn" id="themeBtn">🌙 இரவு</button>
+      <div class="header-actions">
+        <a href="admin.html" class="admin-link-btn">✍️ செய்தி போட</a>
+        <button type="button" class="theme-btn" id="themeBtn">🌙 இரவு</button>
+      </div>
     </header>
 
     <div class="breaking-bar">
@@ -596,6 +616,21 @@
       themeBtn.textContent = isDark ? "☀️ பகல்" : "🌙 இரவு";
     });
 
+    function formatItemDate(item) {
+      if (item.date) return item.date;
+      if (item.publishedAt) {
+        const d = new Date(item.publishedAt);
+        if (!isNaN(d.getTime())) {
+          return d.toLocaleDateString("ta-IN", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          });
+        }
+      }
+      return "இன்று";
+    }
+
     function generateNewsCover(title = "", category = "AI NEWS") {
       const cacheKey = `${category}__${title}`;
       if (coverCache[cacheKey]) return coverCache[cacheKey];
@@ -677,10 +712,18 @@
       return dataUrl;
     }
 
+    function getCardImage(item) {
+      const generated = generateNewsCover(item.title, item.category);
+      if (item.image && item.image.trim()) {
+        return { primary: item.image.trim(), fallback: generated };
+      }
+      return { primary: generated, fallback: generated };
+    }
+
     function ensureLongContent(title, desc) {
       let text = (desc || "").trim();
-      if (text.length < 300) {
-        text = `${text}\n\nஇது தொடர்பாக சம்பந்தப்பட்ட அதிகாரிகள் மற்றும் துறை சார்ந்த வட்டாரங்களில் இருந்து கூடுதல் தகவல்கள் தொடர்ந்து வெளியாகி வருகின்றன. பொதுமக்கள் மற்றும் வாசகர்கள் மத்தியில் இச்செய்தி முக்கிய கவனத்தைப் பெற்றுள்ளது.\n\nமுழுமையான விவரங்கள் வெளியானதும் எமது AI Tamil News தளத்தில் உடனுக்குடன் பதிவேற்றம் செய்யப்படும்.`;
+      if (text.length < 220) {
+        text = `${text}\n\nஇது தொடர்பான கூடுதல் தகவல்கள் தொடர்ந்து வெளியிடப்பட்டு வருகின்றன. எமது AI Tamil News தளத்தில் முக்கியச் செய்திகள் உடனுக்குடன் பதிவேற்றம் செய்யப்படுகின்றன.`;
       }
       return text;
     }
@@ -711,13 +754,15 @@
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank", "noopener");
     }
 
-    function openArticleModal(item, coverSrc, longText) {
+    function openArticleModal(item, coverSrc, fallbackSrc, longText) {
       document.getElementById("modalCategory").textContent = item.category || "செய்திகள்";
-      document.getElementById("modalImg").src = coverSrc;
+      const modalImg = document.getElementById("modalImg");
+      modalImg.onerror = () => { modalImg.src = fallbackSrc; };
+      modalImg.src = coverSrc;
       document.getElementById("modalTitle").textContent = item.title;
       document.getElementById("modalMeta").innerHTML = `
         <span>${item.source || "AI Tamil News"}</span>
-        <span>${item.date || ""}</span>
+        <span>${formatItemDate(item)}</span>
       `;
       document.getElementById("modalBody").textContent = longText;
 
@@ -727,10 +772,13 @@
           <button type="button" class="btn btn-wa" id="mWaBtn">WhatsApp</button>
           <button type="button" class="btn btn-fb" id="mFbBtn">Facebook</button>
         </div>
-        <a class="btn" href="${item.url || "#"}" target="_blank" rel="noopener">மூலச் செய்தி</a>
+        <button type="button" class="btn" id="mCloseBtn">படிக்க முடிந்தது</button>
       `;
       footer.querySelector("#mWaBtn").onclick = () => shareWhatsApp(item);
       footer.querySelector("#mFbBtn").onclick = () => shareFacebook(item);
+      footer.querySelector("#mCloseBtn").onclick = () => {
+        document.getElementById("articleModal").classList.remove("open");
+      };
 
       document.getElementById("articleModal").classList.add("open");
     }
@@ -762,8 +810,10 @@
       });
 
       countPill.textContent = `${filtered.length} செய்திகள்`;
-      if (filtered.length > 0) {
-        document.getElementById("breakingText").textContent = filtered[0].title;
+
+      const breakingItem = filtered.find((n) => n.breaking) || filtered[0];
+      if (breakingItem) {
+        document.getElementById("breakingText").textContent = breakingItem.title;
       }
 
       grid.innerHTML = "";
@@ -771,8 +821,9 @@
         const id = item.id || `item-${index}`;
         const isLiked = !!likesMap[id];
         const likeCount = (Number(item.likes) || 12) + (isLiked ? 1 : 0);
-        const coverSrc = generateNewsCover(item.title, item.category);
+        const { primary: coverSrc, fallback: fallbackSrc } = getCardImage(item);
         const longText = ensureLongContent(item.title, item.description);
+        const dateLabel = formatItemDate(item);
 
         const card = document.createElement("article");
         card.className = "news-card";
@@ -785,7 +836,7 @@
             <div class="news-content">
               <div class="news-meta">
                 <span>${item.source || "AI Tamil News"}</span>
-                <span>${item.date || ""}</span>
+                <span>${dateLabel}</span>
               </div>
               <h3 class="news-title">${item.title}</h3>
               <div class="news-preview">${longText}</div>
@@ -802,9 +853,12 @@
               <button type="button" class="btn btn-wa wa-btn">WA</button>
               <button type="button" class="btn btn-fb fb-btn">FB</button>
             </div>
-            <a class="btn" href="${item.url || "#"}" target="_blank" rel="noopener">மூலம்</a>
+            <button type="button" class="btn open-btn">படி</button>
           </div>
         `;
+
+        const imgEl = card.querySelector(".news-thumb img");
+        imgEl.onerror = () => { imgEl.src = fallbackSrc; };
 
         card.querySelector(".like-btn").onclick = () => {
           const map = getLikes();
@@ -817,10 +871,11 @@
         card.querySelector(".wa-btn").onclick = () => shareWhatsApp(item);
         card.querySelector(".fb-btn").onclick = () => shareFacebook(item);
 
-        const openModal = () => openArticleModal(item, coverSrc, longText);
+        const openModal = () => openArticleModal(item, coverSrc, fallbackSrc, longText);
         card.querySelector(".news-thumb").onclick = openModal;
         card.querySelector(".news-title").onclick = openModal;
         card.querySelector(".read-more-btn").onclick = openModal;
+        card.querySelector(".open-btn").onclick = openModal;
 
         grid.appendChild(card);
       });
@@ -845,7 +900,8 @@
         const res = await fetch("news.json?v=" + Date.now());
         if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
-        allNews = Array.isArray(data) && data.length > 0 ? data : FALLBACK_NEWS;
+        const list = Array.isArray(data) ? data : (data.articles || []);
+        allNews = list.length > 0 ? list : FALLBACK_NEWS;
       } catch (e) {
         console.error("news.json load error:", e);
         allNews = FALLBACK_NEWS;
